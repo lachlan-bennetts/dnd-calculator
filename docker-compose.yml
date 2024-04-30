@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    labels:
+      - "custom.project=dnd-product-store"
+      - "custom.service=postgres"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: postgres

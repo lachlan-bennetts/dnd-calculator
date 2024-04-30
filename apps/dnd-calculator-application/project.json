@@ -56,6 +56,13 @@
     "docker-build": {
       "dependsOn": ["build"],
       "command": "docker build -f apps/dnd-calculator/Dockerfile . -t dnd-calculator"
+    },
+    "prisma-migrate": {
+      "executor": "@prisma/cli:prisma",
+      "options": {
+        "schema": "apps/dnd-calculator/prisma/schema.prisma",
+        "cmd": "migrate dev"   
+      }
     }
   }
 }
