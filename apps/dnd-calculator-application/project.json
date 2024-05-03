@@ -1,7 +1,7 @@
 {
   "name": "dnd-calculator-application",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/dnd-calculator/src",
+  "sourceRoot": "apps/dnd-calculator-application/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,12 +11,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/dnd-calculator",
+        "outputPath": "dist/apps/dnd-calculator-application",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/dnd-calculator/src/main.ts",
-        "tsConfig": "apps/dnd-calculator/tsconfig.app.json",
-        "assets": ["apps/dnd-calculator/src/assets"],
+        "main": "apps/dnd-calculator-application/src/main.ts",
+        "tsConfig": "apps/dnd-calculator-application/tsconfig.app.json",
+        "assets": ["apps/dnd-calculator-application/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -42,25 +42,25 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "dnd-calculator:build"
+        "buildTarget": "dnd-calculator-application:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "dnd-calculator:build:development"
+          "buildTarget": "dnd-calculator-application:build:development"
         },
         "production": {
-          "buildTarget": "dnd-calculator:build:production"
+          "buildTarget": "dnd-calculator-application:build:production"
         }
       }
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/dnd-calculator/Dockerfile . -t dnd-calculator"
+      "command": "docker build -f apps/dnd-calculator-application/Dockerfile . -t dnd-calculator-application"
     },
     "prisma-migrate": {
       "executor": "@prisma/cli:prisma",
       "options": {
-        "schema": "apps/dnd-calculator/prisma/schema.prisma",
+        "schema": "apps/dnd-calculator-application/prisma/schema.prisma",
         "cmd": "migrate dev"   
       }
     }
