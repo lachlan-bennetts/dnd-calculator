@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
-import { postReqCalculate } from '../../middleware/calculator/postRequestCalculation'
-import { CalculatorService } from './CalculatorService';
+import { postReqCalculate } from '../middleware/CalculatorMiddleware'
+import { CalculatorService } from '../services/CalculatorService';
 
 class CalculatorController {
     private router: Router;
