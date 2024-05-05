@@ -20,6 +20,7 @@ export class AuthContoller {
     private initializeRoutes() {
       this.router.get('/', this.handleGetRequest);
       this.router.post('/createUser', this.handleCreateUserReq);
+      this.router.post('/login', this.handleLoginReq);
       // Add more routes as needed
     }
 
@@ -40,11 +41,16 @@ export class AuthContoller {
           const userInfo: CreateUserDto = req.body;
     
           await this.authService.createUser(userInfo);
-          res.send('POST request received');
+          res.status(201).json({ message: 'User created successfully' });
         } catch (error) {
           console.log('Error', error);
           res.send(error.status);
       }
+    }
+
+    private handleLoginReq(req: Request, res: Response) {
+      // Handle POST request logic here
+      res.send('POST request received');
     }
 
     public getRouter(): Router {

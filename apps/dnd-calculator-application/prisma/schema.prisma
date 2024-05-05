@@ -26,7 +26,20 @@ model Race {
   description String
   attackBonus Int?
   spellcastingBonus Int?
+  raceFeatures String[]
   character Character[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ClassFeature {
+  id String @id @default(cuid())
+  name String
+  description String
+  class String
+  subclass String?
+  level Int
+  characterClasses CharacterClass[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -34,7 +47,9 @@ model Race {
 model Class {
   id String @id @default(cuid())
   name String
-  characterClass CharacterClass[]
+  characterClasses CharacterClass[]
+  savingThrows String[]
+  hitDie Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -45,6 +60,8 @@ model CharacterClass {
   characterId String
   class Class? @relation(fields: [classId], references: [id])
   classId String
+  classFeatures ClassFeature[]
+  subclass String?
   level Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -102,6 +119,7 @@ model Character {
   spellSaveDC Int
   isProficient Boolean
   proficiencyBonus Int
+  proficientWeapons String[]
   race Race @relation(fields: [raceId], references: [id])
   raceId String @unique
   user User @relation(fields: [userId], references: [id])
