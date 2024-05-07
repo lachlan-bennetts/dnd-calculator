@@ -20,8 +20,8 @@ export class Logger {
     });
   }
 
-  info(message: string) {
-    this.logger.info(message);
+  info(message: string, value?: any) {
+    this.logger.info(message, value);
   }
 
   warn(message: string) {

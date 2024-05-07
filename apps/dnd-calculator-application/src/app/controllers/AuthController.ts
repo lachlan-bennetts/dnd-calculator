@@ -40,7 +40,7 @@ export class AuthContoller {
         }
           const userInfo: CreateUserDto = req.body;
     
-          await this.authService.createUser(userInfo);
+          await this.authService.createUser(userInfo, this.logger);
           res.status(201).json({ message: 'User created successfully' });
         } catch (error) {
           console.log('Error', error);

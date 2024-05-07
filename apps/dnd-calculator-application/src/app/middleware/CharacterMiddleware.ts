@@ -9,18 +9,30 @@ const postCharacterSchema = joi.object({
   maxHitPoints: joi.number().required(),
   tempHitPoints: joi.number().required(),
   speed: joi.number().required(),
-  race: joi.string().required(),
-  class: joi.string().required(),
-  classLevel: joi.number().required(),
-  overallLevel: joi.number().required(),
   background: joi.string().required(),
+  class: joi.string().required(),
+  subClass: joi.string(),
+  classLevel: joi.number().required(),
+  race: joi.string().required(),
   userId: joi.string().required().uuid(),
+})
+
+const addClassSchema = joi.object({
+  class: joi.string().required(),
+  subClass: joi.string(),
+  classLevel: joi.number().required(),
+})
+
+const postAttrSchema = joi.object({
   str: joi.number().required(),
   dex: joi.number().required(),
   con: joi.number().required(),
   int: joi.number().required(),
   wis: joi.number().required(),
   cha: joi.number().required(),
+})
+
+const postSkillsSchema = joi.object({
   acro: joi.number().required(),
   anim: joi.number().required(),
   arca: joi.number().required(),
@@ -41,4 +53,4 @@ const postCharacterSchema = joi.object({
   surv: joi.number().required(),
 })
 
-
+export const postReqCreateCharacter = validator(postCharacterSchema)

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
+
 export class UserRepository {
   private prisma: PrismaClient;
 

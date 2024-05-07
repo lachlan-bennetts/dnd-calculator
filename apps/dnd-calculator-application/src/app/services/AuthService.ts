@@ -1,7 +1,7 @@
-import {PrismaClient} from '@prisma/client'
 import { UserRepository } from '../repositories/UserRepository';
 import bcrypt from 'bcrypt';
 import { CreateUserDto } from '../dtos/AuthDto';
+import { Logger } from '../utils/Logger';
 
 export class AuthService {
   private userRepository: UserRepository;
@@ -10,16 +10,16 @@ export class AuthService {
     this.userRepository = new UserRepository();
   }
 
-  async createUser(userInfo: CreateUserDto) {
+  async createUser(userInfo: CreateUserDto, logger: Logger) {
     try {
-      console.log('Creating user', userInfo)
+      logger.info(`Creating user, ${userInfo}`)
   
       const existingUser = await this.userRepository.retrieveUserByEmail(userInfo.email);
       if (existingUser) {
         throw new Error('User already exists');
       }
       const passwordHash = await this.hashPassword(userInfo.password);
-      console.log('Hashed password', passwordHash)
+      logger.info(`Hashed password, ${passwordHash}`)
       userInfo.password = passwordHash;
   
       return await this.userRepository.createUser(userInfo);
