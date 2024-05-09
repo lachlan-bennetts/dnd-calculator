@@ -21,14 +21,85 @@ model Campaign {
 }
 
 model Race {
-  id String @id @default(cuid())
-  name String @unique
-  subrace String
-  description String
-  attackBonus Int?
-  spellcastingBonus Int?
-  raceFeatures String[]
+  raceId String @id @default(cuid())
+  parentRace String
+  subRace String
+  briefDescription String
+  creatureType CreatureType
+  darkVision Int
+  statPoolModifier Int[]
+  damageTypeResistance DamageType[]
+  damageTypeAdvantageThrows DamageType[]
+  conditionAdvantageThrows ConditionType[]
+  MaxHealthModifier Int
+  cantripSlotModifier Int?
+  LanguageSlotModifier Int?
+  walkingSpeed Int
+  flyingSpeed Int?
+  size Size
+  effects String[]
+  weaponProficiencies WeaponType[]
+  armourProficiencies ArmourType[]
+  toolProficiencies ToolType[]
+  features RaceFeature[]
+  languages Language[]
   character Character[]
+}
+
+model RaceFeature {
+  raceFeatureId String @id @default(cuid())
+  name String
+  description String
+  race Race[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HeldItem {
+  characterItemId String @id @default(cuid())
+  character Character @relation(fields: [characterId], references: [characterId])
+  characterId String
+  item Item @relation(fields: [itemId], references: [itemId])
+  itemId String
+}
+
+model Item {
+  itemId String @id @default(cuid())
+  name String
+  version String
+  description String
+  rarity String
+  itemType ItemType
+  consumableType ConsumableType
+  toolType ToolType
+  armourType ArmourType
+  weaponType WeaponType
+  attributeModifier Int[]
+  skillModifier Int[]
+  hasCharges Boolean
+  charges Int
+  requiresAttunement Boolean
+  damageType String
+  damageDieType Int
+  damageDieNumber Int
+  damageBonus Int
+  heldItem HeldItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Class {
+  classId String @id @default(cuid())
+  name String
+  hitDie String
+  hitPointsAtFirstLevel Int
+  staticHitPointIncrease Int
+  weaponProficiency WeaponType[]
+  armourProficiency ArmourType[]
+  classFeatures ClassFeature[]
+  characterClasses CharacterClass[]
+  startingEquipment String[]
+  attributeSavingThrows Attribute[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -41,75 +112,75 @@ model ClassFeature {
   subclass String?
   level Int
   characterClasses CharacterClass[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Class {
-  id String @id @default(cuid())
-  name String
-  characterClasses CharacterClass[]
-  savingThrows String[]
-  hitDie Int
+  Class Class @relation(fields: [classId], references: [classId])
+  classId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model CharacterClass {
   id String @id @default(cuid())
-  character Character @relation(fields: [characterId], references: [id])
+  character Character @relation(fields: [characterId], references: [characterId])
   characterId String
-  class Class? @relation(fields: [classId], references: [id])
+  class Class @relation(fields: [classId], references: [classId])
   classId String
   classFeatures ClassFeature[]
   subclass String?
+  classLevel Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Monster {
+  monsterId String @id @default(cuid())
+  name String
+  size Size
+  alignment String
+  armourClass Int
+  hitPoints Int
+  hitDieType Int
+  HitDieNumber Int
+  creatureType CreatureType
+  speed Int
+  attributes String[]
+  savingThrows Int[]
+  skills Int[]
+  features String[]
+  damageResistances DamageType[]
+  damageImmunities DamageType[]
+  conditionImmunities ConditionType[]
+  passivePerception Int
+  senses String[]
+  languages Language[]
+  challengeRating Int
+  specialAbilities String
+  actions String
+  legendaryActions String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Spell {
+  spellId String @id @default(cuid())
+  name String
   level Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Attributes {
-  id String @id @default(cuid())
-  strength Int
-  dexterity Int
-  constitution Int
-  intelligence Int
-  wisdom Int
-  charisma Int
-  character Character @relation(fields: [characterId], references: [id])
-  characterId String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Skills {
-  id String @id @default(cuid())
-  acrobatics Int
-  animalHandling Int
-  arcana Int
-  athletics Int
-  deception Int
-  history Int
-  insight Int
-  intimidation Int
-  investigation Int
-  medicine Int
-  nature Int
-  perception Int
-  performance Int
-  persuasion Int
-  religion Int
-  sleightOfHand Int
-  stealth Int
-  survival Int
-  character Character @relation(fields: [characterId], references: [id])
-  characterId String @unique
+  school String
+  castingTime Int
+  range Int
+  areaOfEffect String
+  components String
+  duration Int
+  description String
+  damageType DamageType
+  damageDieType Int
+  damageDieNumber Int
+  damageBonus Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Character {
-  id String @id @default(cuid())
+  characterId String @id @default(cuid())
   playerName String
   characterName String
   armourClass Int
@@ -120,22 +191,185 @@ model Character {
   spellSaveDC Int
   isProficient Boolean
   proficiencyBonus Int
-  proficientWeapons String[]
-  race Race @relation(fields: [raceName], references: [name])
-  raceName String @unique
-  user User @relation(fields: [userId], references: [id])
+  weaponProficiency WeaponType[]
+  armourProficiency ArmourType[]
+  ToolProficiency ToolType[]
+  Inventory HeldItem[]
+  race Race @relation(fields: [raceId], references: [raceId])
+  raceId String @unique
+  user User @relation(fields: [userId], references: [userId])
   userId String @unique
   characterClasses CharacterClass[]
-  attributes Attributes?
-  skills Skills?
+  attributes Int[]
+  skills Int[]
 } 
 
 model User {
-  id String @id @default(cuid())
+  userId String @id @default(cuid())
   email String @unique
   username String @unique
   password String
   characters Character[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Skill {
+  ACROBATICS
+  ANIMAL_HANDLING
+  ARCANA
+  ATHLETICS
+  DECEPTION
+  HISTORY
+  INSIGHT
+  INTIMIDATION
+  INVESTIGATION
+  MEDICINE
+  NATURE
+  PERCEPTION
+  PERFORMANCE
+  PERSUASION
+  RELIGION
+  SLEIGHT_OF_HAND
+  STEALTH
+  SURVIVAL
+}
+
+enum Attribute {
+  STRENGTH
+  DEXTERITY
+  CONSTITUTION
+  INTELLIGENCE
+  WISDOM
+  CHARISMA
+}
+
+enum ItemType {
+  WEAPON
+  ARMOUR
+  TOOL
+  CONSUMABLE
+  MISC
+}
+
+enum ConsumableType {
+  POTION
+  SCROLL
+  WAND
+  ROD
+  STAFF
+  RING
+  WONDROUS_ITEM
+  MISC
+  NULL
+}
+
+enum ToolType {
+  ARTISANS_TOOL
+  DISGUISE_KIT
+  FORGERY_KIT
+  GAMING_SET
+  HERBALISM_KIT
+  MUSICAL_INSTRUMENT
+  NAVIGATORS_TOOL
+  POISONERS_KIT
+  THIEVES_TOOL
+  VEHICLES_LAND
+  VEHICLES_WATER
+  NULL
+}
+
+enum ArmourType {
+  LIGHT_ARMOUR
+  MEDIUM_ARMOUR
+  HEAVY_ARMOUR
+  SHIELDS
+  NULL
+}
+
+enum WeaponType {
+  SIMPLE_WEAPON
+  MARTIAL_WEAPON
+  NULL
+}
+
+enum DamageType {
+  ACID
+  BLUDGEONING
+  COLD
+  FIRE
+  FORCE
+  LIGHTNING
+  NECROTIC
+  PIERCING
+  POISON
+  PSYCHIC
+  RADIANT
+  SLASHING
+  THUNDER
+  NULL
+}
+
+enum ConditionType {
+  BLINDED
+  CHARMED
+  DEAFENED
+  FRIGHTENED
+  GRAPPLED
+  INCAPACITATED
+  INVISIBLE
+  PARALYZED
+  PETRIFIED
+  POISONED
+  PRONE
+  RESTRAINED
+  STUNNED
+  UNCONSCIOUS
+  NULL
+}
+
+enum Language {
+  COMMON
+  DWARVISH
+  ELVISH
+  GIANT
+  GNOMISH
+  GOBLIN
+  HALFLING
+  ORC
+  ABYSSAL
+  CELESTIAL
+  DRACONIC
+  DEEP_SPEECH
+  INFERNAL
+  PRIMORDIAL
+  SYLVAN
+  UNDERCOMMON
+  ALL
+}
+
+enum Size {
+  TINY
+  SMALL
+  MEDIUM
+  LARGE
+  HUGE
+  GARGANTUAN
+}
+
+enum CreatureType {
+  ABERRATION
+  BEAST
+  CELESTIAL
+  CONSTRUCT
+  DRAGON
+  ELEMENTAL
+  FEY
+  FIEND
+  GIANT
+  HUMANOID
+  MONSTROSITY
+  OOZE
+  PLANT
+  UNDEAD
 }
