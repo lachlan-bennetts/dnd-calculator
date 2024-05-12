@@ -22,6 +22,8 @@ export class CharacterService {
     try{
       logger.info('Commencing creatrCharacter within CharacterService')
       const saveCharacterTemplate = saveCharacterMapper(requestBody, logger)
+      
+      
 
       this.characterRepository.saveCharacter(saveCharacterTemplate)
 

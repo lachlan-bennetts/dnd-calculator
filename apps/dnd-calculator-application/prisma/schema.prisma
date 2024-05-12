@@ -28,19 +28,23 @@ model Race {
   creatureType CreatureType
   darkVision Int
   statPoolModifier Int[]
+  statPoolIncrease Int @default(0)
   damageTypeResistance DamageType[]
   damageTypeAdvantageThrows DamageType[]
   conditionAdvantageThrows ConditionType[]
-  MaxHealthModifier Int
-  cantripSlotModifier Int?
-  LanguageSlotModifier Int?
+  MaxHealthModifier Int @default(0)
+  cantripSlotModifier Int @default(0)
+  LanguageSlotModifier Int @default(0)
   walkingSpeed Int
-  flyingSpeed Int?
-  size Size
+  flyingSpeed Int @default(0)
+  swimmingSpeed Int @default(0)
+  climbingSpeed Int @default(0)
+  size Size @default(MEDIUM)
   effects String[]
-  weaponProficiencies WeaponType[]
-  armourProficiencies ArmourType[]
-  toolProficiencies ToolType[]
+  weaponProficiencies WeaponsEnum[] @default([])
+  armourProficiencies ArmourType[] @default([])
+  toolProficiencies ToolsEnum[] @default([])
+  skillProficiencies Skill[] @default([])
   features RaceFeature[]
   languages Language[]
   character Character[]
@@ -267,7 +271,6 @@ enum ConsumableType {
   RING
   WONDROUS_ITEM
   MISC
-  NULL
 }
 
 enum ToolType {
@@ -282,7 +285,6 @@ enum ToolType {
   THIEVES_TOOL
   VEHICLES_LAND
   VEHICLES_WATER
-  NULL
 }
 
 enum ArmourType {
@@ -290,13 +292,11 @@ enum ArmourType {
   MEDIUM_ARMOUR
   HEAVY_ARMOUR
   SHIELDS
-  NULL
 }
 
 enum WeaponType {
   SIMPLE_WEAPON
   MARTIAL_WEAPON
-  NULL
 }
 
 enum DamageType {
@@ -313,7 +313,6 @@ enum DamageType {
   RADIANT
   SLASHING
   THUNDER
-  NULL
 }
 
 enum ConditionType {
@@ -331,7 +330,6 @@ enum ConditionType {
   RESTRAINED
   STUNNED
   UNCONSCIOUS
-  NULL
 }
 
 enum Language {
@@ -378,4 +376,70 @@ enum CreatureType {
   OOZE
   PLANT
   UNDEAD
+}
+
+enum WeaponsEnum {
+  CLUB
+  DAGGER
+  GREATCLUB
+  HANDAXE
+  JAVELIN
+  LIGHT_HAMMER
+  MACE
+  QUARTERSTAFF
+  SICKLE
+  SPEAR
+  LIGHT_CROSSBOW
+  DART
+  SHORTBOW
+  SLING
+  BATTLEAXE
+  FLAIL
+  GLAIVE
+  GREATAXE
+  GREATSWORD
+  HALBERD
+  LANCE
+  LONGSWORD
+  MAUL
+  MORNINGSTAR
+  PIKE
+  RAPIER
+  SCIMITAR
+  SHORTSWORD
+  TRIDENT
+  WAR_PICK
+  WARHAMMER
+  WHIP
+  BLOWGUN
+  HAND_CROSSBOW
+  HEAVY_CROSSBOW
+  LONGBOW
+  NET
+}
+
+enum ToolsEnum {
+  TINKERS_TOOLS
+  SMITHS_TOOLS
+  BREWERS_SUPPLIES
+  CARPENTERS_TOOLS
+  COBBLERS_TOOLS
+  COOKS_UTENSILS
+  GLASSBLOWERS_TOOLS
+  JEWELERS_TOOLS
+  LEATHERWORKERS_TOOLS
+  MASONS_TOOLS
+  PAINTERS_SUPPLIES
+  POTTERS_TOOLS
+  WEAVERS_TOOLS
+  WOODCARVERS_TOOLS
+  ALCHEMISTS_SUPPLIES
+  CALLIGRAPHERS_SUPPLIES
+  CARTOGRAPHERS_TOOLS
+  DISGUISE_KIT
+  FORGERY_KIT
+  HERBALISM_KIT
+  POISONERS_KIT
+  THIEVES_TOOLS
+  NAVIGATORS_TOOLS
 }
