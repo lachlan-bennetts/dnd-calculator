@@ -10,6 +10,9 @@
       "path": "./tsconfig.spec.json"
     }
   ],
+  "ts-node": {
+    "module": "commonjs"
+  },
   "compilerOptions": {
     "esModuleInterop": true
   }

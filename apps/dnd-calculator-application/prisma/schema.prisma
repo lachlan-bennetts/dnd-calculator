@@ -56,7 +56,7 @@ model RaceFeature {
 }
 
 model HeldItem {
-  characterItemId String @id @default(cuid())
+  heldItemId String @id @default(cuid())
   character Character @relation(fields: [characterId], references: [characterId])
   characterId String
   item Item @relation(fields: [itemId], references: [itemId])
@@ -91,15 +91,17 @@ model Item {
 model Class {
   classId String @id @default(cuid())
   name String
-  hitDie String
-  hitPointsAtFirstLevel Int
-  staticHitPointIncrease Int
-  weaponProficiency WeaponType[]
-  armourProficiency ArmourType[]
+  hitDie Int
+  weaponProficiencies WeaponType[]
+  armourProficiencies ArmourType[]
+  availableToolProficencies ToolType[] @default([])
   classFeatures ClassFeature[]
   characterClasses CharacterClass[]
+  availableSkillProficiencies Skill[]
+  possibleStartingItems String[]
   startingEquipment String[]
-  attributeSavingThrows Attribute[]
+  primaryAttribute Attribute
+  savingThrowProficiencies Attribute[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -111,6 +113,7 @@ model ClassFeature {
   class String
   subclass String?
   level Int
+  spells Spell[]
   characterClasses CharacterClass[]
   Class Class @relation(fields: [classId], references: [classId])
   classId String
@@ -142,6 +145,7 @@ model Monster {
   HitDieNumber Int
   creatureType CreatureType
   speed Int
+  spells Spell[]
   attributes String[]
   savingThrows Int[]
   skills Int[]
@@ -172,6 +176,8 @@ model Spell {
   duration Int
   description String
   damageType DamageType
+  monster Monster[]
+  classFeatures ClassFeature[]
   damageDieType Int
   damageDieNumber Int
   damageBonus Int
@@ -209,7 +215,7 @@ model User {
   email String @unique
   username String @unique
   password String
-  characters Character[]
+  characters Character[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

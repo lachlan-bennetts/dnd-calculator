@@ -63,6 +63,13 @@
         "schema": "apps/dnd-calculator-application/prisma/schema.prisma",
         "command": "prisma migrate dev"   
       }
+    },
+    "prisma-seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "schema": "apps/dnd-calculator-application/prisma/schema.prisma",
+        "command": "prisma db seed --preview-feature"   
+      }
     }
   }
 }
