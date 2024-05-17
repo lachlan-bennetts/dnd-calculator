@@ -21,7 +21,6 @@ export class CharacterService {
   constructor() {
     this.characterRepository = new CharacterRepository();
     this.classRepository = new ClassRepository();
-    this.raceRepository = new RaceRepository();
   }
 
   async createNewCharacter(requestBody: saveCharacterDto, correlationId) {
@@ -48,6 +47,7 @@ export class CharacterService {
       const correspondingClass = await this.classRepository.findClassByName(className)
       this.logger.info(`Found class with className ${className} and correlationId ${correlationId}`)
 
+      // Business Logic for Spellcasting Attribute
       const spellCastingAttr = correspondingClass.spellCastingAttribute
       const characterId = newCharacter.characterId
       const newCharacterClassTemp = mapNewCharacterClass(className, characterId, spellCastingAttr, requestBody)

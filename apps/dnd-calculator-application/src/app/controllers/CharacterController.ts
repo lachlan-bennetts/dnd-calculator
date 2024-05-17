@@ -1,6 +1,4 @@
 import express, { Request, Response, Router } from 'express';
-import { postReqCalculate } from '../middleware/CalculatorMiddleware'
-import { CalculatorService } from '../services/CalculatorService';
 import { postReqCreateCharacter } from '../middleware/CharacterMiddleware';
 import { CharacterService } from '../services/CharacterService';
 import { Logger } from '../utils/Logger';
@@ -20,7 +18,7 @@ class CharacterController {
 
     private initializeRoutes() {
         this.router.get('/', this.handleGetRequest);
-        this.router.post('/', this.handleCreateCharacter);
+        this.router.post('/createCharacter', this.handleCreateCharacter);
         // Add more routes as needed
     }
 
@@ -41,7 +39,7 @@ class CharacterController {
           }
   
           this.characterService.createNewCharacter(req.body, correlationId)
-          res.send('POST request received');
+          res.status(201).json({ message: 'Character created successfully' });
         } catch (error) {
           this.logger.error(`Error has occured at handleCreateCharacter with correlationId ${correlationId} and error ${error}`)
           throw error

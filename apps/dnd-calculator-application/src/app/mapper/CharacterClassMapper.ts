@@ -1,5 +1,3 @@
-import { CharacterClass } from "@prisma/client";
-import { AttributeEnum } from "../utils/constants";
 import { IAttributeObject, ISaveCharacterClass } from "../utils/interfaces";
 import { convertAttrToBonusObject } from "./AttributeMapper";
 import { saveCharacterDto } from "../dtos/saveCharacterDtos";

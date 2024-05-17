@@ -117,7 +117,7 @@ model Background {
   toolProficiencies String[]
   toolTypeProficiencies String[] @default([])
   languageSlotModifier Int @default(0)
-  equipment Item[]
+  equipment String[]
   backgroundFeatureTitle String
   backgroundFeatureDescription String
   suggestedCharacteristics String[]
@@ -172,7 +172,6 @@ model Item {
   damageDieNumber Int
   damageBonus Int
   heldItem HeldItem[]
-  background Background[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

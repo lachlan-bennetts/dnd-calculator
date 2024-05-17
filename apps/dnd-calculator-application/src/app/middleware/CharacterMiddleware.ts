@@ -4,17 +4,18 @@ import { validator } from './validator';
 const postCharacterSchema = joi.object({
   playerName: joi.string().required().max(20).min(3),
   characterName: joi.string().required().max(20).min(3),
-  armourClass: joi.number().required(),
-  currentHitPoints: joi.number().required(),
   maxHitPoints: joi.number().required(),
-  tempHitPoints: joi.number().required(),
   speed: joi.number().required(),
+  equippedArmour: joi.array().items(joi.string()),
+  equippedWeapons: joi.array().items(joi.string()),
+  items: joi.array().items(joi.string()),
+  attributeArray: joi.array().items(joi.number().required()).length(6),
+  skillsArray: joi.array().items(joi.number().required()).length(18),
   background: joi.string().required(),
+  alignment: joi.string().required(),
   class: joi.string().required(),
-  subClass: joi.string(),
-  classLevel: joi.number().required(),
   race: joi.string().required(),
-  userId: joi.string().required().uuid(),
+  userId: joi.string().required(),
 })
 
 const addClassSchema = joi.object({

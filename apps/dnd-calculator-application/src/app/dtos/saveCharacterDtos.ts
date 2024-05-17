@@ -4,15 +4,15 @@ export interface saveCharacterDto {
   playerName: string;
   characterName: string;
   maxHitPoints: number;
+  speed: number;
   items: string[];
-  equippedArmour: string[];
-  equippedWeapon: string[];
+  equippedArmour: string[]; // Implement later
+  equippedWeapons: string[]; // Implement later
   class: ClassEnum;
   alignment: string;
   attributeArray: number[];
   skillsArray: number[];
   chosenProficientSkills: SkillEnum[];
-  speed: number;
   race: RaceEnum;
   background: BackgroundEnum;
   userId: string;
