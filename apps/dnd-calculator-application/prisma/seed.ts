@@ -3,6 +3,26 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+  // Remove with introduction of FE.
+  const seededUser = await prisma.user.upsert({
+    where: {
+      email: 'lachlan@gmail.com'
+    },
+    update: {
+      email: 'lachlan@gmail.com'
+    },
+    create: {
+      email: 'lachlan@gmail.com',
+      password: 'password',
+      username: 'lachlan',
+    }
+  })
+
+  seededUser
+  console.log('Seeding user')
+
+
+
   const barbarian = await prisma.class.create({
     data: {
       className: "Barbarian",
@@ -366,7 +386,7 @@ async function main() {
     data: [
       {
         parentRace: 'Half-Elf',
-        subRace: '',
+        subRace: 'Half-Elf',
         briefDescription: 'Half-elves are known for their adaptability and their ability to connect with others',
         creatureType: 'HUMANOID',
         darkVision: 60,
@@ -421,7 +441,7 @@ async function main() {
     data: [
       {
         parentRace: 'Half-Orc',
-        subRace: '',
+        subRace: 'Half-Orc',
         briefDescription: 'Half-orcs are known for their strength and their ability to endure',
         creatureType: 'HUMANOID',
         darkVision: 60,
@@ -441,7 +461,7 @@ async function main() {
     data: [
       {
         parentRace: 'Human',
-        subRace: '',
+        subRace: 'Human',
         briefDescription: 'Humans are known for their adaptability and their ability to connect with others',
         creatureType: 'HUMANOID',
         darkVision: 0,

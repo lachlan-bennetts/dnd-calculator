@@ -72,7 +72,6 @@ model Class {
   classFeatures ClassFeature[]
   characterClasses CharacterClass[]
   availableSkillProficiencies String[]
-  possibleStartingItems String[]
   startingEquipment String[]
   primaryAttribute String
   spellCastingAttribute String?
