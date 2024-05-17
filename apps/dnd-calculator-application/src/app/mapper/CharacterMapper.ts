@@ -1,16 +1,22 @@
 import { saveCharacterDto } from "../dtos/saveCharacterDtos";
 import { Logger } from "../utils/Logger";
+import { BackgroundEnum, RaceEnum, SkillEnum } from "../utils/constants";
 
 export interface ISaveCharacter {
   playerName: string;
   characterName: string;
+  level: number;
   armourClass: number;
   currentHitPoints: number;
   maxHitPoints: number;
-  tempHitPoints: number;
-  speed: number;
+  proficiencyBonus: number;
+  alignment: string;
+  attributeArray: number[];
+  skillsArray: number[];
+  currentSpeed: number;
   background: string;
   race: string;
+  user: string;
 }
 
 export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logger) => {
@@ -19,13 +25,18 @@ export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logge
     const saveCharacterModel: ISaveCharacter = {
       playerName: requestBody.playerName,
       characterName: requestBody.characterName,
-      armourClass: requestBody.armourClass,
-      currentHitPoints: requestBody.currentHitPoints,
+      level: 1,
+      currentSpeed: requestBody.speed,
+      armourClass: 10,
       maxHitPoints: requestBody.maxHitPoints,
-      tempHitPoints: requestBody.tempHitPoints,
-      speed: requestBody.speed,
+      currentHitPoints: requestBody.maxHitPoints,
+      proficiencyBonus: 2,
+      alignment: requestBody.alignment,
+      attributeArray: requestBody.attributeArray,
+      skillsArray: requestBody.skillsArray,
+      race: requestBody.race,
       background: requestBody.background,
-      race: requestBody.race
+      user: requestBody.userId
     }
     logger.info('saveCharacter mapping successful')
     return saveCharacterModel

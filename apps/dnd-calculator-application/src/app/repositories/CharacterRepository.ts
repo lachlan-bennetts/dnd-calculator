@@ -9,13 +9,24 @@ export class CharacterRepository {
   }
 
   async saveCharacter(characterInfo: ISaveCharacter) {
-     this.prisma.character.create({
+     const saveNewCharacter = await this.prisma.character.create({
       data: {
         playerName: characterInfo.playerName,
         characterName: characterInfo.characterName,
+        level: characterInfo.level,
+        currentSpeed: characterInfo.currentSpeed,
         armourClass: characterInfo.armourClass,
-        
+        maxHitPoints: characterInfo.maxHitPoints,
+        currentHitPoints: characterInfo.currentHitPoints,
+        proficiencyBonus: characterInfo.proficiencyBonus,
+        alignment: characterInfo.alignment,
+        attributeArray: characterInfo.attributeArray,
+        skillArray: characterInfo.skillsArray,
+        subRace: characterInfo.race,
+        backgroundName: characterInfo.background,
+        userId: characterInfo.user,
       }
      })
+    return saveNewCharacter
   }
 }

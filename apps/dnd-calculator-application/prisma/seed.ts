@@ -5,158 +5,183 @@ const prisma = new PrismaClient();
 async function main() {
   const barbarian = await prisma.class.create({
     data: {
-      name: "Barbarian",
+      className: "Barbarian",
       hitDie: 12,
-      weaponProficiencies: ['SIMPLE_WEAPON', 'MARTIAL_WEAPON'],
-      armourProficiencies: ['LIGHT_ARMOUR', 'MEDIUM_ARMOUR', 'SHIELDS'],
-      primaryAttribute: 'STRENGTH',
-      savingThrowProficiencies: ['STRENGTH', 'CONSTITUTION'],
-      availableSkillProficiencies: ['ANIMAL_HANDLING', 'ATHLETICS', 'INTIMIDATION', 'NATURE', 'NATURE', 'PERCEPTION', 'SURVIVAL'],
-      startingEquipment: ['GreatAxe/MARTIAL_WEAPON', '2xHandaxe/SIMPLE_WEAPON', '4xJavelin/explorers_pack']
+      weaponProficiencies: ['Simple', 'Martial'],
+      armourProficiencies: ['Light Armour', 'Medium Armour', 'Shield'],
+      primaryAttribute: 'Strength',
+      spellCastingAttribute: '',
+      savingThrowProficiencies: ['Strength', 'Constitution'],
+      availableSkillProficiencies: ['Animal Handling', 'Athletics', 'Intimidation', 'Nature', 'Nature', 'Perception', 'Survival'],
+      startingEquipment: ['GreatAxe/Martial', '2xHandaxe/Simple', '4xJavelin/explorers_pack'],
+      recommendedStandardArray: [15, 14, 13, 10, 12, 8]
     }
   })
   
   const bard = await prisma.class.create({
     data: {
-      name: 'Bard',
+      className: 'Bard',
       hitDie: 8,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
-      armourProficiencies: ['SHIELDS'],
-      availableToolProficencies: ['MUSICAL_INSTRUMENT', 'MUSICAL_INSTRUMENT', 'MUSICAL_INSTRUMENT'],
-      availableSkillProficiencies: ['ACROBATICS', 'ANIMAL_HANDLING', 'ARCANA', 'ATHLETICS', 'DECEPTION', 'HISTORY', 'INSIGHT', 'INTIMIDATION', 'INVESTIGATION', 'MEDICINE', 'NATURE', 'PERCEPTION', 'PERFORMANCE', 'PERSUASION', 'RELIGION', 'SLEIGHT_OF_HAND', 'STEALTH', 'SURVIVAL'],
-      primaryAttribute: 'CHARISMA',
-      savingThrowProficiencies: ['DEXTERITY', 'CHARISMA'],
-      startingEquipment: ['Rapier/Longsword/Simple_Weapon', 'Diplomats Pack/Entertainers Pack', 'Leather armour', 'Dagger', 'Lute/MUSICAL_INSTRUMENT']
+      weaponProficiencies: ['Simple'],
+      armourProficiencies: ['Shield'],
+      availableToolProficencies: ['Instrument', 'Instrument', 'Instrument'],
+      availableSkillProficiencies: ['Acrobatics', 'Animal Handling', 'Arcana', 'Athletics', 'Deception', 'History', 'Insight', 'Intimidation', 'Investigation', 'Medicine', 'Nature', 'Perception', 'Performance', 'Persuasion', 'Religion', 'Sleight of Hand', 'Stealth', 'Survival'],
+      primaryAttribute: 'Charisma',
+      spellCastingAttribute: 'Charisma',
+      savingThrowProficiencies: ['Dexterity', 'Charisma'],
+      startingEquipment: ['Rapier/Longsword/Simple_Weapon', 'Diplomats Pack/Entertainers Pack', 'Leather armour', 'Dagger', 'Lute/Instrument'],
+      recommendedStandardArray: [8, 14, 12, 13, 10, 15]
     }
   })
   
   const cleric = await prisma.class.create({
     data: {
-      name: 'Cleric',
+      className: 'Cleric',
       hitDie: 8,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
-      armourProficiencies: ['LIGHT_ARMOUR', 'MEDIUM_ARMOUR', 'SHIELDS'],
-      primaryAttribute: 'WISDOM',
-      savingThrowProficiencies: ['WISDOM', 'CHARISMA'],
-      availableSkillProficiencies: ['HISTORY', 'INSIGHT', 'MEDICINE', 'PERSUASION', 'RELIGION'],
-      startingEquipment: ['Mace/SIMPLE_WEAPON', 'Scale_mail/Leather_armour', 'Light_crossbow+20xbolts/SIMPLE_WEAPON', 'Priests_pack/Explorers_pack']
+      weaponProficiencies: ['Simple'],
+      armourProficiencies: ['Light Armour', 'Medium Armour', 'Shield'],
+      primaryAttribute: 'Wisdom',
+      spellCastingAttribute: 'Wisdom',
+      savingThrowProficiencies: ['Wisdom', 'Charisma'],
+      availableSkillProficiencies: ['History', 'Insight', 'Medicine', 'Persuasion', 'Religion'],
+      startingEquipment: ['Mace/Simple', 'Scale_mail/Leather_armour', 'Light_crossbow+20xbolts/Simple', 'Priests_pack/Explorers_pack'],
+      recommendedStandardArray: [13, 10, 14, 12, 15, 8]
     }
   })
   
   const druid = await prisma.class.create({
     data: {
-      name: 'Druid',
+      className: 'Druid',
       hitDie: 8,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
-      armourProficiencies: ['LIGHT_ARMOUR', 'MEDIUM_ARMOUR', 'SHIELDS'],
-      primaryAttribute: 'WISDOM',
-      savingThrowProficiencies: ['INTELLIGENCE', 'WISDOM'],
-      availableSkillProficiencies: ['ARCANA', 'ANIMAL_HANDLING', 'INSIGHT', 'MEDICINE', 'NATURE', 'PERCEPTION', 'RELIGION', 'SURVIVAL'],
-      startingEquipment: ['Wooden_shield/SIMPLE_WEAPON', 'Scimitar/SIMPLE_WEAPON', 'Leather_armour', 'Explorer_pack/Druids_pack']
+      weaponProficiencies: ['Simple'],
+      armourProficiencies: ['Light Armour', 'Medium Armour', 'Shield'],
+      primaryAttribute: 'Wisdom',
+      spellCastingAttribute: 'Wisdom',
+      savingThrowProficiencies: ['Intelligence', 'Wisdom'],
+      availableSkillProficiencies: ['Arcana', 'Animal Handling', 'Insight', 'Medicine', 'Nature', 'Perception', 'Religion', 'Survival'],
+      startingEquipment: ['Wooden_shield/Simple', 'Scimitar/Simple', 'Leather_armour', 'Explorer_pack/Druids_pack'],
+      recommendedStandardArray: [10, 12, 14, 13, 15, 8]
     }
   })
   
   const fighter = await prisma.class.create({
     data: {
-      name: 'Fighter',
+      className: 'Fighter',
       hitDie: 10,
-      weaponProficiencies: ['SIMPLE_WEAPON', 'MARTIAL_WEAPON'],
-      armourProficiencies: ['LIGHT_ARMOUR', 'MEDIUM_ARMOUR', 'HEAVY_ARMOUR', 'SHIELDS'],
-      primaryAttribute: 'STRENGTH',
-      savingThrowProficiencies: ['STRENGTH', 'CONSTITUTION'],
-      availableSkillProficiencies: ['ACROBATICS', 'ANIMAL_HANDLING', 'ATHLETICS', 'HISTORY', 'INSIGHT', 'INTIMIDATION', 'PERCEPTION', 'SURVIVAL'],
-      startingEquipment: ['Chainmail/Splintmail', 'Longsword/SIMPLE_WEAPON', 'Shield/SIMPLE_WEAPON', 'Crossbow+20xbolts/SIMPLE_WEAPON', 'Dungeoneers_pack/Explorers_pack']
+      weaponProficiencies: ['Simple', 'Martial'],
+      armourProficiencies: ['Light Armour', 'Medium Armour', 'Heavy Armour', 'Shield'],
+      primaryAttribute: 'Strength',
+      spellCastingAttribute: '',
+      savingThrowProficiencies: ['Strength', 'Constitution'],
+      availableSkillProficiencies: ['Acrobatics', 'Animal Handling', 'Athletics', 'History', 'Insight', 'Intimidation', 'Perception', 'Survival'],
+      startingEquipment: ['Chainmail/Splintmail', 'Longsword/Simple', 'Shield/Simple', 'Crossbow+20xbolts/Simple', 'Dungeoneers_pack/Explorers_pack'],
+      recommendedStandardArray: [15, 8, 14, 13, 12, 10]
     }
   })
   
   const monk = await prisma.class.create({
     data: {
-      name: 'Monk',
+      className: 'Monk',
       hitDie: 8,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
+      weaponProficiencies: ['Simple'],
       armourProficiencies: [],
-      primaryAttribute: 'DEXTERITY',
-      savingThrowProficiencies: ['STRENGTH', 'DEXTERITY'],
-      availableSkillProficiencies: ['ACROBATICS', 'ATHLETICS', 'HISTORY', 'INSIGHT', 'RELIGION', 'STEALTH'],
-      startingEquipment: ['Shortsword/SIMPLE_WEAPON', 'Dungeoneers_pack/Explorers_pack']
+      primaryAttribute: 'Dexterity',
+      spellCastingAttribute: '',
+      savingThrowProficiencies: ['Strength', 'Dexterity'],
+      availableSkillProficiencies: ['Acrobatics', 'Athletics', 'History', 'Insight', 'Religion', 'Stealth'],
+      startingEquipment: ['Shortsword/Simple', 'Dungeoneers_pack/Explorers_pack'],
+      recommendedStandardArray: [8, 15, 13, 14, 10, 12]
     }
   })
   
   const paladin = await prisma.class.create({
     data: {
-      name: 'Paladin',
+      className: 'Paladin',
       hitDie: 10,
-      weaponProficiencies: ['SIMPLE_WEAPON', 'MARTIAL_WEAPON'],
-      armourProficiencies: ['LIGHT_ARMOUR', 'MEDIUM_ARMOUR', 'HEAVY_ARMOUR', 'SHIELDS'],
-      primaryAttribute: 'STRENGTH',
-      savingThrowProficiencies: ['WISDOM', 'CHARISMA'],
-      availableSkillProficiencies: ['ATHLETICS', 'INSIGHT', 'INTIMIDATION', 'MEDICINE', 'PERSUASION', 'RELIGION'],
-      startingEquipment: ['Chainmail/Splintmail', 'Martial_weapon/SIMPLE_WEAPON', 'Shield/SIMPLE_WEAPON', 'Javelin/SIMPLE_WEAPON', 'Priests_pack/Explorers_pack']
+      weaponProficiencies: ['Simple', 'Martial'],
+      armourProficiencies: ['Light Armour', 'Medium Armour', 'Heavy Armour', 'Shield'],
+      primaryAttribute: 'Strength',
+      spellCastingAttribute: 'Charisma',
+      savingThrowProficiencies: ['Wisdom', 'Charisma'],
+      availableSkillProficiencies: ['Athletics', 'Insight', 'Intimidation', 'Medicine', 'Persuasion', 'Religion'],
+      startingEquipment: ['Chainmail/Splintmail', 'Martial_weapon/Simple', 'Shield/Simple', 'Javelin/Simple', 'Priests_pack/Explorers_pack'],
+      recommendedStandardArray: [15, 8, 13, 10, 12, 14]
     }
   })
   
   const ranger = await prisma.class.create({
     data: {
-      name: 'Ranger',
+      className: 'Ranger',
       hitDie: 10,
-      weaponProficiencies: ['SIMPLE_WEAPON', 'MARTIAL_WEAPON'],
-      armourProficiencies: ['LIGHT_ARMOUR', 'MEDIUM_ARMOUR', 'SHIELDS'],
-      primaryAttribute: 'DEXTERITY',
-      savingThrowProficiencies: ['STRENGTH', 'DEXTERITY'],
-      availableSkillProficiencies: ['ANIMAL_HANDLING', 'ATHLETICS', 'INSIGHT', 'INVESTIGATION', 'NATURE', 'PERCEPTION', 'STEALTH', 'SURVIVAL'],
-      startingEquipment: ['Scale_mail/Leather_armour', '2xShortsword/SIMPLE_WEAPON', 'Dungeoneers_pack/Explorers_pack']
+      weaponProficiencies: ['Simple', 'Martial'],
+      armourProficiencies: ['Light Armour', 'Medium Armour', 'Shield'],
+      primaryAttribute: 'Dexterity',
+      spellCastingAttribute: 'Wisdom',
+      savingThrowProficiencies: ['Strength', 'Dexterity'],
+      availableSkillProficiencies: ['Animal Handling', 'Athletics', 'Insight', 'Investigation', 'Nature', 'Perception', 'Stealth', 'Survival'],
+      startingEquipment: ['Scale_mail/Leather_armour', '2xShortsword/Simple', 'Dungeoneers_pack/Explorers_pack'],
+      recommendedStandardArray: [8, 15, 13, 12, 14, 10]
     }
   })
 
   const rogue = await prisma.class.create({
     data: {
-      name: "Rogue",
+      className: "Rogue",
       hitDie: 8,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
-      armourProficiencies: ['LIGHT_ARMOUR'],
-      primaryAttribute: 'DEXTERITY',
-      savingThrowProficiencies: ['DEXTERITY', 'INTELLIGENCE'],
-      availableSkillProficiencies: ['ACROBATICS', 'DECEPTION', 'INSIGHT', 'INTIMIDATION', 'INVESTIGATION', 'PERCEPTION', 'PERSUASION', 'STEALTH'],
-      startingEquipment: ['Rapier/Shortsword', 'Shortbow/Shortsword', "Burglars_Pack/Dungeoneers Pack/Explorers Pack", "Leather armour", "Dagger", "Dagger", "Thieves_tools"]
+      weaponProficiencies: ['Simple'],
+      armourProficiencies: ['Light Armour'],
+      primaryAttribute: 'Dexterity',
+      spellCastingAttribute: '',
+      savingThrowProficiencies: ['Dexterity', 'Intelligence'],
+      availableSkillProficiencies: ['Acrobatics', 'Deception', 'Insight', 'Intimidation', 'Investigation', 'Perception', 'Persuasion', 'Stealth'],
+      startingEquipment: ['Rapier/Shortsword', 'Shortbow/Shortsword', "Burglars_Pack/Dungeoneers Pack/Explorers Pack", "Leather armour", "Dagger",
+       "Dagger", "Thieves_tools"],
+      recommendedStandardArray: [8, 15, 14, 13, 12, 10]
     },
   });
   
   const sorcerer = await prisma.class.create({
     data: {
-      name: 'Sorcerer',
+      className: 'Sorcerer',
       hitDie: 6,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
+      weaponProficiencies: ['Simple'],
       armourProficiencies: [],
-      primaryAttribute: 'CHARISMA',
-      savingThrowProficiencies: ['CONSTITUTION', 'CHARISMA'],
-      availableSkillProficiencies: ['ARCANA', 'DECEPTION', 'INSIGHT', 'INTIMIDATION', 'PERSUASION', 'RELIGION'],
-      startingEquipment: ['Light_crossbow+20xbolts/SIMPLE_WEAPON', 'Component_pouch/Arcane_focus', 'Dungeoneers_pack/Explorers_pack']
+      primaryAttribute: 'Charisma',
+      spellCastingAttribute: 'Charisma',
+      savingThrowProficiencies: ['Constitution', 'Charisma'],
+      availableSkillProficiencies: ['Arcana', 'Deception', 'Insight', 'Intimidation', 'Persuasion', 'Religion'],
+      startingEquipment: ['Light_crossbow+20xbolts/Simple', 'Component_pouch/Arcane_focus', 'Dungeoneers_pack/Explorers_pack'],
+      recommendedStandardArray: [8, 13, 14, 12, 10, 15]
     }
   })
   
   const warlock = await prisma.class.create({
     data: {
-      name: 'Warlock',
+      className: 'Warlock',
       hitDie: 8,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
+      weaponProficiencies: ['Simple'],
       armourProficiencies: [],
-      primaryAttribute: 'CHARISMA',
-      savingThrowProficiencies: ['WISDOM', 'CHARISMA'],
-      availableSkillProficiencies: ['ARCANA', 'DECEPTION', 'HISTORY', 'INTIMIDATION', 'INVESTIGATION', 'NATURE', 'RELIGION'],
-      startingEquipment: ['Light_crossbow+20xbolts/SIMPLE_WEAPON', 'Component_pouch/Arcane_focus', 'Scholars_pack/Dungeoneers_pack']
+      primaryAttribute: 'Charisma',
+      spellCastingAttribute: 'Charisma',
+      savingThrowProficiencies: ['Wisdom', 'Charisma'],
+      availableSkillProficiencies: ['Arcana', 'Deception', 'History', 'Intimidation', 'Investigation', 'Nature', 'Religion'],
+      startingEquipment: ['Light_crossbow+20xbolts/Simple', 'Component_pouch/Arcane_focus', 'Scholars_pack/Dungeoneers_pack'],
+      recommendedStandardArray: [8, 13, 14, 12, 10, 15]
     }
   })
 
   const wizard = await prisma.class.create({
     data: {
-      name: 'Wizard',
+      className: 'Wizard',
       hitDie: 6,
-      weaponProficiencies: ['SIMPLE_WEAPON'],
+      weaponProficiencies: ['Simple'],
       armourProficiencies: [],
-      primaryAttribute: 'INTELLIGENCE',
-      savingThrowProficiencies: ['INTELLIGENCE', 'WISDOM'],
-      availableSkillProficiencies: ['ARCANA', 'HISTORY', 'INSIGHT', 'INVESTIGATION', 'MEDICINE', 'RELIGION'],
-      startingEquipment: ['Quarterstaff/SIMPLE_WEAPON', 'Component_pouch/Arcane_focus', 'Scholars_pack/Explorers_pack']
+      primaryAttribute: 'Intelligence',
+      spellCastingAttribute: 'Intelligence',
+      savingThrowProficiencies: ['Intelligence', 'Wisdom'],
+      availableSkillProficiencies: ['Arcana', 'History', 'Insight', 'Investigation', 'Medicine', 'Religion'],
+      startingEquipment: ['Quarterstaff/Simple', 'Component_pouch/Arcane_focus', 'Scholars_pack/Explorers_pack'],
+      recommendedStandardArray: [8, 13, 14, 15, 12, 10]
     }
   })
 
@@ -173,49 +198,49 @@ async function main() {
   warlock
   wizard
   console.log(`Classes seeded successfully`)
-
+  
   const dragonborn = await prisma.race.createMany({
     data: [
       {parentRace: 'Dragonborn', subRace: 'Black', briefDescription: 'Black dragons breathe acid and are associated with acid and poison', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['ACID'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Blue', briefDescription: 'Blue dragons breathe lightning and are associated with lightning and thunder', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['LIGHTNING'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Brass', briefDescription: 'Brass dragons breathe fire and are associated with fire and heat', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['FIRE'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Bronze', briefDescription: 'Bronze dragons breathe lightning and are associated with lightning and thunder', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['LIGHTNING'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Copper', briefDescription: 'Copper dragons breathe acid and are associated with acid and poison', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['ACID'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Gold', briefDescription: 'Gold dragons breathe fire and are associated with fire and heat', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['FIRE'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Green', briefDescription: 'Green dragons breathe poison and are associated with poison and acid', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['ACID'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Red', briefDescription: 'Red dragons breathe fire and are associated with fire and heat', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['FIRE'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'Silver', briefDescription: 'Silver dragons breathe cold and are associated with cold and ice', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['COLD'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
       {parentRace: 'Dragonborn', subRace: 'White', briefDescription: 'White dragons breathe cold and are associated with cold and ice', 
       creatureType: 'HUMANOID', darkVision: 0, statPoolModifier: [2, 0, 0, 0, 0, 1], damageTypeResistance: ['COLD'], damageTypeAdvantageThrows: [],
-      conditionAdvantageThrows: [], languages: ['COMMON', 'DRACONIC'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
-      LanguageSlotModifier: 0, walkingSpeed: 9},
+      conditionAdvantageThrows: [], languages: ['Common', 'Draconic'], size: 'MEDIUM', MaxHealthModifier: 0, cantripSlotModifier: 0, 
+      languageSlotModifier: 0, walkingSpeed: 9},
     ]
   })
 
@@ -231,11 +256,11 @@ async function main() {
         damageTypeResistance: ['POISON'],
         damageTypeAdvantageThrows: ['POISON'],
         conditionAdvantageThrows: [],
-        languages: ['COMMON', 'DWARVISH'],
+        languages: ['Common', 'Dwarvish'],
         size: 'MEDIUM',
         MaxHealthModifier: 1,
         cantripSlotModifier: 0,
-        LanguageSlotModifier: 0,
+        languageSlotModifier: 0,
         walkingSpeed: 7.6,
         weaponProficiencies: ['BATTLEAXE', 'HANDAXE', 'LIGHT_HAMMER', 'WARHAMMER']
       },
@@ -249,11 +274,11 @@ async function main() {
         damageTypeResistance: ['POISON'],
         damageTypeAdvantageThrows: ['POISON'],
         conditionAdvantageThrows: [],
-        languages: ['COMMON', 'DWARVISH'],
+        languages: ['Common', 'Dwarvish'],
         size: 'MEDIUM',
         MaxHealthModifier: 0,
         cantripSlotModifier: 0,
-        LanguageSlotModifier: 0,
+        languageSlotModifier: 0,
         walkingSpeed: 7.6
       }
     ]
@@ -271,13 +296,13 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: ['CHARMED'],
-        languages: ['COMMON', 'ELVISH'],
+        languages: ['Common', 'Elvish'],
         size: 'MEDIUM',
         cantripSlotModifier: 1,
-        LanguageSlotModifier: 1,
+        languageSlotModifier: 1,
         walkingSpeed: 9,
-        skillProficiencies: ['PERCEPTION'],
-        weaponProficiencies: ['LONGSWORD', 'SHORTSWORD', 'SHORTBOW', 'LONGBOW']
+        skillProficiencies: ['Perception'],
+        weaponProficiencies: ['Longsword', 'Shortsword', 'Shortbow', 'Longbow']
       },
       {
         parentRace: 'Elf',
@@ -289,11 +314,11 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: ['CHARMED'],
-        languages: ['COMMON', 'ELVISH'],
+        languages: ['Common', 'Elvish'],
         size: 'MEDIUM',
         walkingSpeed: 35,
-        skillProficiencies: ['PERCEPTION'],
-        weaponProficiencies: ['LONGSWORD', 'SHORTSWORD', 'SHORTBOW', 'LONGBOW']
+        skillProficiencies: ['Perception'],
+        weaponProficiencies: ['Longsword', 'Shortsword', 'Shortbow', 'Longbow']
       }
     ]
   })
@@ -310,12 +335,12 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: [],
-        languages: ['COMMON', 'GNOMISH'],
+        languages: ['Common', 'Gnomish'],
         size: 'SMALL',
         walkingSpeed: 7.6,
         cantripSlotModifier: 1,
-        LanguageSlotModifier: 1,
-        toolProficiencies: ['TINKERS_TOOLS']
+        languageSlotModifier: 1,
+        toolProficiencies: ["Tinker's Tools"]
       },
       {
         parentRace: 'Gnome',
@@ -327,12 +352,12 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: [],
-        languages: ['COMMON', 'GNOMISH'],
+        languages: ['Common', 'Gnomish'],
         size: 'SMALL',
         walkingSpeed: 7.6,
         cantripSlotModifier: 1,
-        LanguageSlotModifier: 1,
-        toolProficiencies: ['TINKERS_TOOLS']
+        languageSlotModifier: 1,
+        toolProficiencies: ["Tinker's Tools"]
       }
     ]
   })
@@ -350,10 +375,10 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: ['CHARMED'],
-        languages: ['COMMON', 'ELVISH'],
+        languages: ['Common', 'Elvish'],
         size: 'MEDIUM',
         walkingSpeed: 9,
-        LanguageSlotModifier: 1,
+        languageSlotModifier: 1,
       }
     ]
   })
@@ -370,7 +395,7 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: ['FRIGHTENED'],
-        languages: ['COMMON', 'HALFLING'],
+        languages: ['Common', 'HALFLING'],
         size: 'SMALL',
         walkingSpeed: 7.6,
       },
@@ -384,7 +409,7 @@ async function main() {
         damageTypeResistance: ['POISON'],
         damageTypeAdvantageThrows: ['POISON'],
         conditionAdvantageThrows: [],
-        languages: ['COMMON', 'HALFLING'],
+        languages: ['Common', 'HALFLING'],
         size: 'SMALL',
         walkingSpeed: 7.6,
       }
@@ -404,10 +429,10 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: [],
-        languages: ['COMMON', 'ORC'],
+        languages: ['Common', 'Orcish'],
         size: 'MEDIUM',
         walkingSpeed: 30,
-        skillProficiencies: []
+        skillProficiencies: ['Intimidation']
       }
     ]
   })
@@ -425,13 +450,13 @@ async function main() {
         damageTypeResistance: [],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: [],
-        languages: ['COMMON'],
-        LanguageSlotModifier: 1,
+        languages: ['Common'],
+        languageSlotModifier: 1,
         size: 'MEDIUM',
         walkingSpeed: 9,
-        skillProficiencies: ['ACROBATICS', 'ANIMAL_HANDLING', 'ARCANA', 'ATHLETICS', 'DECEPTION', 'HISTORY', 
-        'INSIGHT', 'INTIMIDATION', 'INVESTIGATION', 'MEDICINE', 'NATURE', 'PERCEPTION', 'PERFORMANCE', 'PERSUASION',
-        'RELIGION', 'SLEIGHT_OF_HAND', 'STEALTH', 'SURVIVAL']
+        skillProficiencies: ['Acrobatics', 'Animal Handling', 'Arcana', 'Athletics', 'Deception', 'History', 
+        'Insight', 'Intimidation', 'Investigation', 'Medicine', 'Nature', 'Perception', 'Performance', 'Persuasion',
+        'Religion', 'Sleight of Hand', 'Stealth', 'Survival']
       }
     ]
   })
@@ -448,7 +473,7 @@ async function main() {
         damageTypeResistance: ['FIRE'],
         damageTypeAdvantageThrows: [],
         conditionAdvantageThrows: [],
-        languages: ['COMMON', 'INFERNAL'],
+        languages: ['Common', 'INFERNAL'],
         size: 'MEDIUM',
         walkingSpeed: 9,
       }

@@ -8,6 +8,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output = "./schema.svg"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -21,32 +26,31 @@ model Campaign {
 }
 
 model Race {
-  raceId String @id @default(cuid())
+  subRace String @unique @id
   parentRace String
-  subRace String
   briefDescription String
-  creatureType CreatureType
+  creatureType String
   darkVision Int
   statPoolModifier Int[]
   statPoolIncrease Int @default(0)
-  damageTypeResistance DamageType[]
-  damageTypeAdvantageThrows DamageType[]
-  conditionAdvantageThrows ConditionType[]
+  damageTypeResistance String[]
+  damageTypeAdvantageThrows String[]
+  conditionAdvantageThrows String[]
   MaxHealthModifier Int @default(0)
   cantripSlotModifier Int @default(0)
-  LanguageSlotModifier Int @default(0)
+  languageSlotModifier Int @default(0)
   walkingSpeed Int
   flyingSpeed Int @default(0)
   swimmingSpeed Int @default(0)
   climbingSpeed Int @default(0)
-  size Size @default(MEDIUM)
+  size String @default("Medium")
   effects String[]
-  weaponProficiencies WeaponsEnum[] @default([])
-  armourProficiencies ArmourType[] @default([])
-  toolProficiencies ToolsEnum[] @default([])
-  skillProficiencies Skill[] @default([])
+  weaponProficiencies String[] @default([])
+  armourProficiencies String[] @default([])
+  toolProficiencies String[] @default([])
+  skillProficiencies String[] @default([])
   features RaceFeature[]
-  languages Language[]
+  languages String[]
   character Character[]
 }
 
@@ -59,53 +63,21 @@ model RaceFeature {
   updatedAt DateTime @updatedAt
 }
 
-model HeldItem {
-  heldItemId String @id @default(cuid())
-  character Character @relation(fields: [characterId], references: [characterId])
-  characterId String
-  item Item @relation(fields: [itemId], references: [itemId])
-  itemId String
-}
-
-model Item {
-  itemId String @id @default(cuid())
-  name String
-  version String
-  description String
-  rarity String
-  itemType ItemType
-  consumableType ConsumableType
-  toolType ToolType
-  armourType ArmourType
-  weaponType WeaponType
-  attributeModifier Int[]
-  skillModifier Int[]
-  hasCharges Boolean
-  charges Int
-  requiresAttunement Boolean
-  damageType String
-  damageDieType Int
-  damageDieNumber Int
-  damageBonus Int
-  heldItem HeldItem[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Class {
-  classId String @id @default(cuid())
-  name String
+  className String @unique @id
   hitDie Int
-  weaponProficiencies WeaponType[]
-  armourProficiencies ArmourType[]
-  availableToolProficencies ToolType[] @default([])
+  weaponProficiencies String[]
+  armourProficiencies String[]
+  availableToolProficencies String[] @default([])
   classFeatures ClassFeature[]
   characterClasses CharacterClass[]
-  availableSkillProficiencies Skill[]
+  availableSkillProficiencies String[]
   possibleStartingItems String[]
   startingEquipment String[]
-  primaryAttribute Attribute
-  savingThrowProficiencies Attribute[]
+  primaryAttribute String
+  spellCastingAttribute String?
+  savingThrowProficiencies String[]
+  recommendedStandardArray Int[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -118,9 +90,8 @@ model ClassFeature {
   subclass String?
   level Int
   spells Spell[]
-  characterClasses CharacterClass[]
-  Class Class @relation(fields: [classId], references: [classId])
-  classId String
+  Class Class @relation(fields: [className], references: [className])
+  className String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -129,37 +100,117 @@ model CharacterClass {
   id String @id @default(cuid())
   character Character @relation(fields: [characterId], references: [characterId])
   characterId String
-  class Class @relation(fields: [classId], references: [classId])
-  classId String
-  classFeatures ClassFeature[]
-  subclass String?
+  class Class @relation(fields: [className], references: [className])
+  className String
+  spellSaveDC Int
+  ProficientSkills String[]
+  subClass String?
   classLevel Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+
+model Background {
+  backgroundName String @unique @id
+  description String
+  skillProficiencies String[]
+  toolProficiencies String[]
+  toolTypeProficiencies String[] @default([])
+  languageSlotModifier Int @default(0)
+  equipment Item[]
+  backgroundFeatureTitle String
+  backgroundFeatureDescription String
+  suggestedCharacteristics String[]
+  Character Character[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Character {
+  characterId String @id @default(cuid())
+  playerName String
+  characterName String
+  level Int
+  armourClass Int
+  currentHitPoints Int
+  maxHitPoints Int
+  tempHitPoints Int @default(0)
+  currentSpeed Int
+  proficiencyBonus Int
+  alignment String
+  background Background @relation(fields: [backgroundName], references: [backgroundName])
+  backgroundName String
+  Inventory HeldItem[]
+  race Race @relation(fields: [subRace], references: [subRace])
+  subRace String @unique
+  user User @relation(fields: [userId], references: [userId])
+  userId String @unique
+  characterClasses CharacterClass[]
+  attributeArray Int[]
+  skillArray Int[]
+} 
+
+
+model Item {
+  itemId String @id @default(cuid())
+  name String @unique
+  version String
+  description String
+  rarity String
+  itemType String
+  consumableType String?
+  toolType String?
+  armourType String?
+  weaponType String?
+  attributeModifier Int[]
+  skillModifier Int[]
+  hasCharges Boolean
+  charges Int
+  requiresAttunement Boolean
+  damageType String
+  damageDieType Int
+  damageDieNumber Int
+  damageBonus Int
+  heldItem HeldItem[]
+  background Background[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HeldItem {
+  heldItemId String @id @default(cuid())
+  character Character @relation(fields: [characterId], references: [characterId])
+  characterId String
+  item Item @relation(fields: [itemId], references: [itemId])
+  quantity Int
+  isEquipped Boolean @default(false)
+  equipmentType String[]
+  itemId String
+}
+
 model Monster {
   monsterId String @id @default(cuid())
   name String
-  size Size
+  size String
   alignment String
   armourClass Int
   hitPoints Int
   hitDieType Int
   HitDieNumber Int
-  creatureType CreatureType
+  creatureType String
   speed Int
   spells Spell[]
   attributes String[]
   savingThrows Int[]
   skills Int[]
   features String[]
-  damageResistances DamageType[]
-  damageImmunities DamageType[]
-  conditionImmunities ConditionType[]
+  damageResistances String[]
+  damageImmunities String[]
+  conditionImmunities String[]
   passivePerception Int
   senses String[]
-  languages Language[]
+  languages String[]
   challengeRating Int
   specialAbilities String
   actions String
@@ -179,7 +230,7 @@ model Spell {
   components String
   duration Int
   description String
-  damageType DamageType
+  damageType String
   monster Monster[]
   classFeatures ClassFeature[]
   damageDieType Int
@@ -189,30 +240,6 @@ model Spell {
   updatedAt DateTime @updatedAt
 }
 
-model Character {
-  characterId String @id @default(cuid())
-  playerName String
-  characterName String
-  armourClass Int
-  currenthitPoints Int
-  maxHitPoints Int
-  tempHitPoints Int?
-  speed Int
-  spellSaveDC Int
-  isProficient Boolean
-  proficiencyBonus Int
-  weaponProficiency WeaponType[]
-  armourProficiency ArmourType[]
-  ToolProficiency ToolType[]
-  Inventory HeldItem[]
-  race Race @relation(fields: [raceId], references: [raceId])
-  raceId String @unique
-  user User @relation(fields: [userId], references: [userId])
-  userId String @unique
-  characterClasses CharacterClass[]
-  attributes Int[]
-  skills Int[]
-} 
 
 model User {
   userId String @id @default(cuid())
@@ -222,224 +249,4 @@ model User {
   characters Character[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-enum Skill {
-  ACROBATICS
-  ANIMAL_HANDLING
-  ARCANA
-  ATHLETICS
-  DECEPTION
-  HISTORY
-  INSIGHT
-  INTIMIDATION
-  INVESTIGATION
-  MEDICINE
-  NATURE
-  PERCEPTION
-  PERFORMANCE
-  PERSUASION
-  RELIGION
-  SLEIGHT_OF_HAND
-  STEALTH
-  SURVIVAL
-}
-
-enum Attribute {
-  STRENGTH
-  DEXTERITY
-  CONSTITUTION
-  INTELLIGENCE
-  WISDOM
-  CHARISMA
-}
-
-enum ItemType {
-  WEAPON
-  ARMOUR
-  TOOL
-  CONSUMABLE
-  MISC
-}
-
-enum ConsumableType {
-  POTION
-  SCROLL
-  WAND
-  ROD
-  STAFF
-  RING
-  WONDROUS_ITEM
-  MISC
-}
-
-enum ToolType {
-  ARTISANS_TOOL
-  DISGUISE_KIT
-  FORGERY_KIT
-  GAMING_SET
-  HERBALISM_KIT
-  MUSICAL_INSTRUMENT
-  NAVIGATORS_TOOL
-  POISONERS_KIT
-  THIEVES_TOOL
-  VEHICLES_LAND
-  VEHICLES_WATER
-}
-
-enum ArmourType {
-  LIGHT_ARMOUR
-  MEDIUM_ARMOUR
-  HEAVY_ARMOUR
-  SHIELDS
-}
-
-enum WeaponType {
-  SIMPLE_WEAPON
-  MARTIAL_WEAPON
-}
-
-enum DamageType {
-  ACID
-  BLUDGEONING
-  COLD
-  FIRE
-  FORCE
-  LIGHTNING
-  NECROTIC
-  PIERCING
-  POISON
-  PSYCHIC
-  RADIANT
-  SLASHING
-  THUNDER
-}
-
-enum ConditionType {
-  BLINDED
-  CHARMED
-  DEAFENED
-  FRIGHTENED
-  GRAPPLED
-  INCAPACITATED
-  INVISIBLE
-  PARALYZED
-  PETRIFIED
-  POISONED
-  PRONE
-  RESTRAINED
-  STUNNED
-  UNCONSCIOUS
-}
-
-enum Language {
-  COMMON
-  DWARVISH
-  ELVISH
-  GIANT
-  GNOMISH
-  GOBLIN
-  HALFLING
-  ORC
-  ABYSSAL
-  CELESTIAL
-  DRACONIC
-  DEEP_SPEECH
-  INFERNAL
-  PRIMORDIAL
-  SYLVAN
-  UNDERCOMMON
-  ALL
-}
-
-enum Size {
-  TINY
-  SMALL
-  MEDIUM
-  LARGE
-  HUGE
-  GARGANTUAN
-}
-
-enum CreatureType {
-  ABERRATION
-  BEAST
-  CELESTIAL
-  CONSTRUCT
-  DRAGON
-  ELEMENTAL
-  FEY
-  FIEND
-  GIANT
-  HUMANOID
-  MONSTROSITY
-  OOZE
-  PLANT
-  UNDEAD
-}
-
-enum WeaponsEnum {
-  CLUB
-  DAGGER
-  GREATCLUB
-  HANDAXE
-  JAVELIN
-  LIGHT_HAMMER
-  MACE
-  QUARTERSTAFF
-  SICKLE
-  SPEAR
-  LIGHT_CROSSBOW
-  DART
-  SHORTBOW
-  SLING
-  BATTLEAXE
-  FLAIL
-  GLAIVE
-  GREATAXE
-  GREATSWORD
-  HALBERD
-  LANCE
-  LONGSWORD
-  MAUL
-  MORNINGSTAR
-  PIKE
-  RAPIER
-  SCIMITAR
-  SHORTSWORD
-  TRIDENT
-  WAR_PICK
-  WARHAMMER
-  WHIP
-  BLOWGUN
-  HAND_CROSSBOW
-  HEAVY_CROSSBOW
-  LONGBOW
-  NET
-}
-
-enum ToolsEnum {
-  TINKERS_TOOLS
-  SMITHS_TOOLS
-  BREWERS_SUPPLIES
-  CARPENTERS_TOOLS
-  COBBLERS_TOOLS
-  COOKS_UTENSILS
-  GLASSBLOWERS_TOOLS
-  JEWELERS_TOOLS
-  LEATHERWORKERS_TOOLS
-  MASONS_TOOLS
-  PAINTERS_SUPPLIES
-  POTTERS_TOOLS
-  WEAVERS_TOOLS
-  WOODCARVERS_TOOLS
-  ALCHEMISTS_SUPPLIES
-  CALLIGRAPHERS_SUPPLIES
-  CARTOGRAPHERS_TOOLS
-  DISGUISE_KIT
-  FORGERY_KIT
-  HERBALISM_KIT
-  POISONERS_KIT
-  THIEVES_TOOLS
-  NAVIGATORS_TOOLS
 }

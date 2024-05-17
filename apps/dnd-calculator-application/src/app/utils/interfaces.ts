@@ -1,0 +1,18 @@
+
+export interface ISaveCharacterClass {
+  classLevel: number;
+  className: string;
+  spellSaveDC: number;
+  proficientSkills: string[];
+  subClass?: string;
+  characterId: string;
+}
+
+export interface IAttributeObject {
+  Strength: number;
+  Dexterity: number;
+  Constitution: number;
+  Intelligence: number;
+  Wisdom: number;
+  Charisma: number;
+}

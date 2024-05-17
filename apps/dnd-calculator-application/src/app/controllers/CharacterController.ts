@@ -40,7 +40,7 @@ class CharacterController {
               this.logger.info('Success', value);
           }
   
-          this.characterService.createCharacter(req.body, this.logger)
+          this.characterService.createNewCharacter(req.body, correlationId)
           res.send('POST request received');
         } catch (error) {
           this.logger.error(`Error has occured at handleCreateCharacter with correlationId ${correlationId} and error ${error}`)
