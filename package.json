@@ -7,10 +7,11 @@
   },
   "scripts": {
     "dockerUp": "POSTGRES_USER=postgres POSTGRES_PASSWORD=password POSTGRES_DB=postgres sh scripts/startDependencyStack.sh",
-    "seed": "prisma db seed"
+    "seed": "export DATABASE_URL=postgresql://postgres:password@localhost:5432/postgres?schema=public && prisma db seed"
   },
   "private": true,
   "dependencies": {
+    "@mermaid-js/mermaid-cli": "^10.9.0",
     "@prisma/client": "5.13.0",
     "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
@@ -18,6 +19,7 @@
     "express-validator": "^7.0.1",
     "joi": "^17.13.0",
     "prisma": "^5.13.0",
+    "prisma-erd-generator": "^1.11.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.11.2",
