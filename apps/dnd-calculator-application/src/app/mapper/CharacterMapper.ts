@@ -40,8 +40,8 @@ export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logge
     }
     logger.info('saveCharacter mapping successful')
     return saveCharacterModel
-  } catch(error) {
-    logger.error('saveCharacter mapping failed', error)
+  } catch(error: any) {
+    logger.error(`saveCharacter mapping failed, ${error}`)
     throw error
   }
 }

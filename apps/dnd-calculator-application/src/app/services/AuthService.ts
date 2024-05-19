@@ -23,9 +23,9 @@ export class AuthService {
       userInfo.password = passwordHash;
   
       return await this.userRepository.createUser(userInfo);
-    } catch (error) {
+    } catch (error: any) {
       console.log('Error creating user within UserService', error);
-      throw new Error(error);
+      throw error;
     }
   }
 

@@ -8,7 +8,7 @@ export class ClassRepository {
     this.prisma = new PrismaClient()
   }
 
-  async findClassByName(className: string): Promise<Class> {
+  async findClassByName(className: string): Promise<Class | null> {
     const retrievedClass = await this.prisma.class.findFirst({
       where: {
         className: className

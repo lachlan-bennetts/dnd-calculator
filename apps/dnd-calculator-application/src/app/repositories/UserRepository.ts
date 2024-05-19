@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { ISaveUser } from '../utils/interfaces';
 
 
 export class UserRepository {
@@ -8,7 +9,7 @@ export class UserRepository {
     this.prisma = new PrismaClient()
   }
 
-  async createUser(userInfo) {
+  async createUser(userInfo: ISaveUser) {
     return await this.prisma.user.create({
       data: {
         email: userInfo.email,

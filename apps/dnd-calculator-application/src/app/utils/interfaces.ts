@@ -1,3 +1,8 @@
+export interface ISaveUser {
+  username: string;
+  password: string;
+  email: string;
+}
 
 export interface ISaveCharacterClass {
   classLevel: number;

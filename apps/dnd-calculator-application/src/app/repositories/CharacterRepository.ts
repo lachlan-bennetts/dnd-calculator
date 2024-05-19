@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { ISaveCharacter } from "../mapper/CharacterMapper";
+import { Logger } from "../utils/Logger";
 
 export class CharacterRepository {
   private prisma: PrismaClient;
@@ -28,5 +29,15 @@ export class CharacterRepository {
       }
      })
     return saveNewCharacter
+  }
+
+  async deleteCharacter(characterId: string, logger: Logger, correlationId: string) {
+    logger.info(`Deleting character with ${characterId} and correlationId ${correlationId}`)
+    const deleteCharacter = await this.prisma.character.delete({
+      where: {
+        characterId: characterId
+      }
+    })
+    return deleteCharacter
   }
 }

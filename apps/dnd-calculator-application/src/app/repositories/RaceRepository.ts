@@ -7,7 +7,7 @@ export class RaceRepository {
     this.prisma = new PrismaClient();
   }
 
-  async findRaceByName(raceName: string): Promise<Race> {
+  async findRaceByName(raceName: string): Promise<Race | null> {
     const retrievedRace = await this.prisma.race.findFirst({
       where: {
         subRace: raceName

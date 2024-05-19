@@ -42,9 +42,9 @@ export class AuthContoller {
     
           await this.authService.createUser(userInfo, this.logger);
           res.status(201).json({ message: 'User created successfully' });
-        } catch (error) {
+        } catch (error: any) {
           console.log('Error', error);
-          res.send(error.status);
+          res.status(error.status);
       }
     }
 

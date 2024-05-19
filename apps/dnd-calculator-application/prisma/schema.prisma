@@ -142,9 +142,9 @@ model Character {
   backgroundName String
   Inventory HeldItem[]
   race Race @relation(fields: [subRace], references: [subRace])
-  subRace String @unique
+  subRace String 
   user User @relation(fields: [userId], references: [userId])
-  userId String @unique
+  userId String
   characterClasses CharacterClass[]
   attributeArray Int[]
   skillArray Int[]
