@@ -76,4 +76,16 @@ export class CharacterService {
     this.logger.info('Character mapped successfully')
     return characterMapped
   }
+
+  async getCharacters(userId: string, correlationId: string) {
+    try {
+      this.logger.info(`Commencing getCharacters within CharacterService with correlationId ${correlationId}`)
+      const characters = await this.characterRepository.retrieveCharacterInfo(userId, this.logger, correlationId)
+      this.logger.info(`Characters retrieved successfully with correlationId ${correlationId}`)
+      return characters
+    } catch(error) {
+      this.logger.error(`An error has occured, ${error}`)
+      throw error
+    }
+  }
 }

@@ -140,7 +140,7 @@ model Character {
   alignment String
   background Background @relation(fields: [backgroundName], references: [backgroundName])
   backgroundName String
-  Inventory HeldItem[]
+  inventory HeldItem[]
   race Race @relation(fields: [subRace], references: [subRace])
   subRace String 
   user User @relation(fields: [userId], references: [userId])

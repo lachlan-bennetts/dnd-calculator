@@ -40,4 +40,25 @@ export class CharacterRepository {
     })
     return deleteCharacter
   }
+
+  async retrieveCharacterInfo(userId: string, logger: Logger, correlationId: string) {
+    logger.info(`Getting characters for user ${userId} and correlationId ${correlationId}`)
+    try {
+      const getCharacters = await this.prisma.character.findMany({
+        where: {
+          userId: userId
+        },
+        include: {
+          race: true,
+          background: true,
+          characterClasses: true,
+          Inventory: true,
+        }
+      })
+      return getCharacters
+    } catch (error) {
+      logger.error(`Error getting characters for user ${userId} and correlationId ${correlationId}`)
+      throw error
+    }
+  }
 }

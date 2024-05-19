@@ -18,6 +18,10 @@ const postCharacterSchema = joi.object({
   userId: joi.string().required(),
 })
 
+const getCharactersHeadersSchema = joi.object({
+  "user-id": joi.string().required()
+})
+
 const addClassSchema = joi.object({
   class: joi.string().required(),
   subClass: joi.string(),
@@ -55,3 +59,4 @@ const postSkillsSchema = joi.object({
 })
 
 export const postReqCreateCharacter = validator(postCharacterSchema)
+export const getReqCharacters = validator(getCharactersHeadersSchema)
