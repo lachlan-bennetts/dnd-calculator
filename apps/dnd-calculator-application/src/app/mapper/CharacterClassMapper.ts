@@ -4,11 +4,10 @@ import { saveCharacterDto } from "../dtos/saveCharacterDtos";
 import { AttributeEnum } from "../utils/constants";
 
 export const mapNewCharacterClass = (className: string, characterId: string, spellCastAttr: AttributeEnum | null, requestBody: saveCharacterDto): ISaveCharacterClass => {
+
   const characterAttributes = requestBody.attributeArray
-  const attrBonusObj = convertAttrToBonusObject(characterAttributes)
-  console.log('attrBonusObj', attrBonusObj)
-  const spellSaveDC = calculateSpellSaveDC(attrBonusObj, spellCastAttr, 2)
-  console.log('spellSaveDC', spellSaveDC)
+  const attributeBonuses = convertAttrToBonusObject(characterAttributes)
+  const spellSaveDC = calculateSpellSaveDC(attributeBonuses, spellCastAttr, 2)
   const proficientSkills = requestBody.chosenProficientSkills
   const newCharClass = {
     classLevel: 1,

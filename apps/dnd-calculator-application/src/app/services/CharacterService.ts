@@ -33,11 +33,12 @@ export class CharacterService {
         throw new CustomError("User does not exist", 404)
       }
 
-      // Save Base Character
+      // Map Character
       // Due to the nature of class, race and background being largely static tables, we've used a foreign key relationship with strings, not needing a join.
-      this.logger.info('Commencing createCharacter within CharacterService')
-      const saveCharacterTemplate = saveCharacterMapper(requestBody, this.logger)
-      this.logger.info(`saveCharacterTemplate produced successfully with correlationId ${correlationId}`)
+      const saveCharacterTemplate = this.mapCharacterSave(requestBody, correlationId)
+
+      // Map Character Class, except characterId
+
 
       // Using a const as we will need to access the attributes of the character later
       const newCharacter = await this.characterRepository.saveCharacter(saveCharacterTemplate)
@@ -54,11 +55,10 @@ export class CharacterService {
       this.logger.info(`Found class with className ${className} and correlationId ${correlationId}`)
 
       // Business Logic for Spellcasting Attribute
-      const spellCastingAttr = correspondingClass.spellCastingAttribute
-      const spellCastingAttrEnum = spellCastingAttr as AttributeEnum
+      const spellCastingAttr = correspondingClass.spellCastingAttribute as AttributeEnum
       this.logger.info(`Spellcasting attribute is ${spellCastingAttr} and correlationId ${correlationId}`)
       const characterId = newCharacter.characterId
-      const newCharacterClassTemp = mapNewCharacterClass(className, characterId, spellCastingAttrEnum, requestBody)
+      const newCharacterClassTemp = mapNewCharacterClass(className, characterId, spellCastingAttr, requestBody)
       await this.characterClassRepository.saveCharacterClass(newCharacterClassTemp, this.logger, correlationId)
     } catch(error) {
       this.logger.error(`An error has occured, ${error}`)
@@ -66,9 +66,9 @@ export class CharacterService {
     }
   }
 
-  mapCharacterSave(characterData: saveCharacterDto) {
+  mapCharacterSave(characterData: saveCharacterDto, correlationId: string) {
     this.logger.info('Commencing mapCharacterSave within CharacterService')
-    const characterMapped = saveCharacterMapper(characterData, this.logger)
+    const characterMapped = saveCharacterMapper(characterData, this.logger, correlationId)
     if(!characterMapped) {
       this.logger.error('Error mapping character')
       throw new CustomError('Error mapping character', 400)
@@ -77,12 +77,24 @@ export class CharacterService {
     return characterMapped
   }
 
+  // mapCharacterClassSave(characterData: saveCharacterDto, characterId: string, correlationId: string) {
+  //   this.logger.info('Commencing mapCharacterClassSave within CharacterService')
+  //   const characterClassMapped = mapNewCharacterClass(characterData, characterId, this.logger, correlationId)
+  //   if(!characterClassMapped) {
+  //     this.logger.error('Error mapping character class')
+  //     throw new CustomError('Error mapping character class', 400)
+  //   }
+  //   this.logger.info('Character class mapped successfully')
+  //   return characterClassMapped
+  // }
+
   async getCharacters(userId: string, correlationId: string) {
     try {
       this.logger.info(`Commencing getCharacters within CharacterService with correlationId ${correlationId}`)
-      const characters = await this.characterRepository.retrieveCharacterInfo(userId, this.logger, correlationId)
-      this.logger.info(`Characters retrieved successfully with correlationId ${correlationId}`)
-      return characters
+      const charactersInfo = await this.characterRepository.retrieveCharacterInfo(userId, this.logger, correlationId)
+      this.logger.info(`CharacterInfo retrieved successfully with correlationId ${correlationId}`)
+      const classes = charactersInfo[0].characterClasses.map((characterClass) => characterClass.className)
+      const ClassesAndFeatures = await this.classRepository.retrieveClassAndFeatures(classes, this.logger, correlationId)
     } catch(error) {
       this.logger.error(`An error has occured, ${error}`)
       throw error

@@ -52,7 +52,7 @@ export class CharacterRepository {
           race: true,
           background: true,
           characterClasses: true,
-          Inventory: true,
+          inventory: true,
         }
       })
       return getCharacters

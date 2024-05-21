@@ -41,7 +41,7 @@ class CharacterController {
 				return res.sendStatus(400)
 			}
 
-			this.characterService.getCharacters(userId, this.correlationId)
+			// this.characterService.getCharacters(userId, this.correlationId)
 			res.send('GET request received from calculator');
 		} catch(error: any) {
 			this.logger.error(`Error has occured at handleGetCharacters with correlationId ${this.correlationId} and error ${error}`)

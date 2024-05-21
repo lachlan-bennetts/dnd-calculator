@@ -19,9 +19,9 @@ export interface ISaveCharacter {
   user: string;
 }
 
-export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logger) => {
+export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logger, correlationId: string) => {
   try {
-    logger.info('Commencing saveCharacter mapping from requestBody')
+    logger.info('Commencing saveCharacter mapping from requestBody with correlationId: ' + correlationId)
     const saveCharacterModel: ISaveCharacter = {
       playerName: requestBody.playerName,
       characterName: requestBody.characterName,
@@ -38,7 +38,7 @@ export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logge
       background: requestBody.background,
       user: requestBody.userId
     }
-    logger.info('saveCharacter mapping successful')
+    logger.info(`saveCharacter mapping successful with ${correlationId}`)
     return saveCharacterModel
   } catch(error: any) {
     logger.error(`saveCharacter mapping failed, ${error}`)

@@ -19,7 +19,7 @@ const postCharacterSchema = joi.object({
 })
 
 const getCharactersHeadersSchema = joi.object({
-  "user-id": joi.string().required()
+  userId: joi.string().required()
 })
 
 const addClassSchema = joi.object({
