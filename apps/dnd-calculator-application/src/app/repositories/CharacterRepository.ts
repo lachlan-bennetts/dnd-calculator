@@ -41,7 +41,7 @@ export class CharacterRepository {
     return deleteCharacter
   }
 
-  async retrieveCharacterInfo(userId: string, logger: Logger, correlationId: string) {
+  async retrieveCharacters(userId: string, logger: Logger, correlationId: string) {
     logger.info(`Getting characters for user ${userId} and correlationId ${correlationId}`)
     try {
       const getCharacters = await this.prisma.character.findMany({
@@ -49,15 +49,30 @@ export class CharacterRepository {
           userId: userId
         },
         include: {
-          race: true,
-          background: true,
           characterClasses: true,
-          inventory: true,
         }
       })
       return getCharacters
     } catch (error) {
       logger.error(`Error getting characters for user ${userId} and correlationId ${correlationId}`)
+      throw error
+    }
+  }
+
+  async retrieveCharacterNames(userId: string, logger: Logger, correlationId: string) {
+    logger.info(`Getting characters with retrieveCharacters Method for user ${userId} and correlationId ${correlationId}`)
+    try{
+      const characterNames = await this.prisma.character.findMany({
+        where: {
+          userId: userId
+        },
+        select: {
+          characterName: true,
+        }
+      })
+      return characterNames.map((character) => character.characterName)
+    } catch (error) {
+      logger.error(`Error getting character names for user ${userId} and correlationId ${correlationId}`)
       throw error
     }
   }

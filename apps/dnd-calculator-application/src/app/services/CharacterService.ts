@@ -8,6 +8,7 @@ import { mapNewCharacterClass } from "../mapper/CharacterClassMapper";
 import { UserRepository } from "../repositories/UserRepository";
 import { CustomError } from "../utils/CustomError";
 import { AttributeEnum } from "../utils/constants";
+import { inspect } from "util";
 
 
 export class CharacterService {
@@ -31,6 +32,13 @@ export class CharacterService {
       const userExists = await this.userRepository.retrieveUserById(requestBody.userId)
       if(!userExists) {
         throw new CustomError("User does not exist", 404)
+      }
+
+      // Check if character of same name for user already exists
+      const characterName = requestBody.characterName
+      const characterNames = await this.characterRepository.retrieveCharacterNames(requestBody.userId, this.logger, correlationId)
+      if(characterNames && characterNames.includes(characterName)) {
+        throw new CustomError("Character name already exists for user", 400)
       }
 
       // Map Character
@@ -60,6 +68,9 @@ export class CharacterService {
       const characterId = newCharacter.characterId
       const newCharacterClassTemp = mapNewCharacterClass(className, characterId, spellCastingAttr, requestBody)
       await this.characterClassRepository.saveCharacterClass(newCharacterClassTemp, this.logger, correlationId)
+      return {
+        message: "Character created successfully"
+      }
     } catch(error) {
       this.logger.error(`An error has occured, ${error}`)
       throw error
@@ -88,16 +99,35 @@ export class CharacterService {
   //   return characterClassMapped
   // }
 
+  // Get list of characters you have, don't need heaps of info, just names classes and levels
   async getCharacters(userId: string, correlationId: string) {
     try {
       this.logger.info(`Commencing getCharacters within CharacterService with correlationId ${correlationId}`)
-      const charactersInfo = await this.characterRepository.retrieveCharacterInfo(userId, this.logger, correlationId)
-      this.logger.info(`CharacterInfo retrieved successfully with correlationId ${correlationId}`)
-      const classes = charactersInfo[0].characterClasses.map((characterClass) => characterClass.className)
-      const ClassesAndFeatures = await this.classRepository.retrieveClassAndFeatures(classes, this.logger, correlationId)
+      const charactersInfo = await this.characterRepository.retrieveCharacters(userId, this.logger, correlationId)
+      this.logger.info(`CharacterInfo retrieved successfully with correlationId ${correlationId}, ${inspect(charactersInfo)}`)
+      const characterList = charactersInfo.map((character) => {
+      const characterClasses = character.characterClasses.map((characterClass) => ({
+        className: characterClass.className,
+        classLevel: characterClass.classLevel
+      }))
+      // Work on mapping the character info to a more readable format, also sorting for most recently edited
+        return {
+          characterName: character.characterName,
+          class: characterClasses,
+          level: character.level,
+          race: character.subRace,
+          background: character.backgroundName
+        }
+      })
+      this.logger.info(`CharacterList mapped successfully with correlationId ${correlationId}, ${inspect(characterList)}`)
+      return characterList
     } catch(error) {
       this.logger.error(`An error has occured, ${error}`)
-      throw error
+      throw error 
     }
+  }
+
+  async getCharacterInfo(characterId: string, correlationId: string) {
+    return 'Character Info'
   }
 }

@@ -18,7 +18,7 @@ export class ClassRepository {
     return retrievedClass
   }
 
-  async retrieveClassAndFeatures(classNames: string[], logger: Logger, correlationId: string): Promise<Class[]> {
+  async  retrieveClassAndFeatures(classNames: string[], logger: Logger, correlationId: string): Promise<Class[]> {
     logger.info(`Getting classes for ${classNames} and correlationId ${correlationId}`)
     try {
       const getClasses = await this.prisma.class.findMany({

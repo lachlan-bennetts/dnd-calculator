@@ -19,8 +19,8 @@ const postCharacterSchema = joi.object({
 })
 
 const getCharactersHeadersSchema = joi.object({
-  userId: joi.string().required()
-})
+  "user-id": joi.string().required()
+}).unknown(true)
 
 const addClassSchema = joi.object({
   class: joi.string().required(),
