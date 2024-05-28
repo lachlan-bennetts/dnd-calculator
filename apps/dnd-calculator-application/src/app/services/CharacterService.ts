@@ -102,6 +102,12 @@ export class CharacterService {
   // Get list of characters you have, don't need heaps of info, just names classes and levels
   async getCharacters(userId: string, correlationId: string) {
     try {
+      this.logger.info(`Check user exists with userId ${userId} and correlationId ${correlationId}`)
+      const userExists = await this.userRepository.retrieveUserById(userId)
+      if(!userExists) {
+        throw new CustomError("User does not exist", 404)
+      }
+
       this.logger.info(`Commencing getCharacters within CharacterService with correlationId ${correlationId}`)
       const charactersInfo = await this.characterRepository.retrieveCharacters(userId, this.logger, correlationId)
       this.logger.info(`CharacterInfo retrieved successfully with correlationId ${correlationId}, ${inspect(charactersInfo)}`)

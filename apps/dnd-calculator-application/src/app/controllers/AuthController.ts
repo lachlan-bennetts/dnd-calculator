@@ -1,8 +1,9 @@
-import express, { Request, Response, Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { postReqCreateUser } from '../middleware/AuthMiddleware'
 import { CreateUserDto } from '../dtos/AuthDto';
 import { AuthService } from '../services/AuthService';
 import { Logger } from '../utils/Logger';
+import { CustomError } from '../utils/CustomError';
 
 
 export class AuthContoller {
@@ -29,7 +30,7 @@ export class AuthContoller {
       res.send('GET request received from calculator');
     }
 
-    private handleCreateUserReq = async (req: Request, res: Response) => {
+    private handleCreateUserReq = async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { error, value } = postReqCreateUser(req.body);
         if(error) {
@@ -42,9 +43,13 @@ export class AuthContoller {
     
           await this.authService.createUser(userInfo, this.logger);
           res.status(201).json({ message: 'User created successfully' });
-        } catch (error: any) {
-          console.log('Error', error);
-          res.status(error.status);
+        } catch (err: any) {
+          console.log('Error', err);
+          if (err instanceof CustomError) {
+            next(err)
+          }
+          const error = new CustomError('An error has occured in handleCreateUser', 500)
+          next(error)
       }
     }
 
