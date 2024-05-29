@@ -8,6 +8,7 @@ export interface ISaveCharacterClass {
   classLevel: number;
   className: string;
   spellSaveDC: number;
+  spellCapacity: number; 
   proficientSkills: string[];
   subClass?: string;
   characterId: string;

@@ -282,6 +282,23 @@ export enum SpellTypeEnum {
   TRANSMUTATION = "Transmutation"
 }
 
+export const spellSlots = {
+  1: [2],
+  2: [3],
+  3: [4, 2],
+  4: [4, 3],
+  5: [4, 3, 2],
+}
+
+export const SpellcastingClasses = [
+  "Bard",
+  "Cleric",
+  "Druid",
+  "Paladin",
+  "Ranger",
+  "Sorcerer"
+]
+
 export enum Size {
   SMALL = "Small",
   MEDIUM = "Medium",
@@ -348,3 +365,18 @@ export enum EquipmentTypeEnum {
   TRINKET = "Trinket",
   CONSUMABLE = "Consumable"
 }
+
+export const sorcererSpellCapacity = [
+  2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+  12, 12, 13, 13, 14, 14, 15, 15, 15, 15
+]
+
+export const warlockSpellCapacity = [
+  2, 3, 4, 5, 6, 7, 8, 9, 10, 10,
+  11, 11, 12, 12, 13, 13, 14, 14, 15, 15
+]
+
+export const bardSpellCapacity = [
+  4, 5, 6, 7, 8, 9, 10, 11, 12, 14,
+  15, 15, 16, 18, 19, 19, 20, 22, 22, 22
+]

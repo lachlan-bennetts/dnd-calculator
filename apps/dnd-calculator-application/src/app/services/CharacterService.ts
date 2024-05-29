@@ -7,7 +7,7 @@ import { CharacterClassRepository } from "../repositories/CharacterClassReposito
 import { mapNewCharacterClass } from "../mapper/CharacterClassMapper";
 import { UserRepository } from "../repositories/UserRepository";
 import { CustomError } from "../utils/CustomError";
-import { AttributeEnum } from "../utils/constants";
+import { AttributeEnum, ClassEnum, SpellcastingClasses, spellSlots } from "../utils/constants";
 import { inspect } from "util";
 
 
@@ -45,8 +45,6 @@ export class CharacterService {
       // Due to the nature of class, race and background being largely static tables, we've used a foreign key relationship with strings, not needing a join.
       const saveCharacterTemplate = this.mapCharacterSave(requestBody, correlationId)
 
-      // Map Character Class, except characterId
-
 
       // Using a const as we will need to access the attributes of the character later
       const newCharacter = await this.characterRepository.saveCharacter(saveCharacterTemplate)
@@ -67,6 +65,7 @@ export class CharacterService {
       this.logger.info(`Spellcasting attribute is ${spellCastingAttr} and correlationId ${correlationId}`)
       const characterId = newCharacter.characterId
       const newCharacterClassTemp = mapNewCharacterClass(className, characterId, spellCastingAttr, requestBody)
+      console.log("New Character Class Temp", newCharacterClassTemp)
       await this.characterClassRepository.saveCharacterClass(newCharacterClassTemp, this.logger, correlationId)
       return {
         message: "Character created successfully"
@@ -88,16 +87,15 @@ export class CharacterService {
     return characterMapped
   }
 
-  // mapCharacterClassSave(characterData: saveCharacterDto, characterId: string, correlationId: string) {
-  //   this.logger.info('Commencing mapCharacterClassSave within CharacterService')
-  //   const characterClassMapped = mapNewCharacterClass(characterData, characterId, this.logger, correlationId)
-  //   if(!characterClassMapped) {
-  //     this.logger.error('Error mapping character class')
-  //     throw new CustomError('Error mapping character class', 400)
-  //   }
-  //   this.logger.info('Character class mapped successfully')
-  //   return characterClassMapped
-  // }
+  getInitialSpellSlots(characterLevel: number, characterClass: ClassEnum): number[] {
+    this.logger.info('Commencing getSpellSlots within CharacterService')
+    if (characterLevel == 1 && SpellcastingClasses.includes(characterClass)) {
+      this.logger.info('Character is level 1 and has spellcasting class')
+      return spellSlots[characterLevel]
+    }
+    this.logger.info(`Character is level 1 with no spellcasting class`)
+    return []
+  }
 
   // Get list of characters you have, don't need heaps of info, just names classes and levels
   async getCharacters(userId: string, correlationId: string) {
@@ -134,6 +132,13 @@ export class CharacterService {
   }
 
   async getCharacterInfo(characterId: string, correlationId: string) {
-    return 'Character Info'
+    try {
+      this.logger.info(`Commencing getCharacterInfo within CharacterService with correlationId ${correlationId}`)
+      const characterInfo = await this.characterRepository.retrieveCharacterInfo(characterId, this.logger, correlationId)
+      this.logger.info(`CharacterInfo retrieved successfully with correlationId ${correlationId}, ${inspect(characterInfo)}`)
+  } catch(err: any) {
+    this.logger.error(`An error has occured in getCharacterInfo with correlationId ${correlationId} and error ${err}`)
+    throw err
+    }
   }
 }

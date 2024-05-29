@@ -59,6 +59,27 @@ export class CharacterRepository {
     }
   }
 
+  async retrieveCharacterInfo(characterId: string, logger: Logger, correlationId: string) {
+    logger.info(`Getting character info for character ${characterId} and correlationId ${correlationId}`)
+    try {
+      const getCharacter = await this.prisma.character.findFirst({
+        where: {
+          characterId: characterId
+        },
+        include: {
+          characterClasses: true,
+          inventory: true,
+          race: true,
+          background: true,
+        }
+      })
+      return getCharacter
+    } catch (error) {
+      logger.error(`Error getting character info for character ${characterId} and correlationId ${correlationId}`)
+      throw error
+    }
+  }
+
   async retrieveCharacterNames(userId: string, logger: Logger, correlationId: string) {
     logger.info(`Getting characters with retrieveCharacters Method for user ${userId} and correlationId ${correlationId}`)
     try{

@@ -69,6 +69,7 @@ model Class {
   weaponProficiencies String[]
   armourProficiencies String[]
   availableToolProficencies String[] @default([])
+  spells Spell[]
   classFeatures ClassFeature[]
   characterClasses CharacterClass[]
   availableSkillProficiencies String[]
@@ -88,7 +89,6 @@ model ClassFeature {
   class String
   subclass String?
   level Int
-  spells Spell[]
   Class Class @relation(fields: [className], references: [className])
   className String
   createdAt DateTime @default(now())
@@ -96,15 +96,28 @@ model ClassFeature {
 }
 
 model CharacterClass {
-  id String @id @default(cuid())
+  characterClassId String @id @default(cuid())
   character Character @relation(fields: [characterId], references: [characterId])
   characterId String
   class Class @relation(fields: [className], references: [className])
   className String
   spellSaveDC Int
+  spellCapacity Int
+  characterSpells CharacterSpell[]
   ProficientSkills String[]
   subClass String?
   classLevel Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CharacterSpell {
+  id String @id @default(cuid())
+  characterClass CharacterClass @relation(fields: [characterClassId], references: [characterClassId])
+  characterClassId String
+  spell Spell @relation(fields: [spellId], references: [spellId])
+  spellId String
+  active Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -230,7 +243,8 @@ model Spell {
   description String
   damageType String
   monster Monster[]
-  classFeatures ClassFeature[]
+  class Class[]
+  characterSpells CharacterSpell[]
   damageDieType Int
   damageDieNumber Int
   damageBonus Int
