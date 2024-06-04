@@ -1,5 +1,5 @@
 import express, { Request, Response, Router, NextFunction } from 'express';
-import { getReqCharacters, postReqCreateCharacter } from '../middleware/CharacterMiddleware';
+import { deleteReqCharacter, getReqCharacterInfo, getReqCharacters, postReqCreateCharacter } from '../middleware/CharacterMiddleware';
 import { CharacterService } from '../services/CharacterService';
 import { Logger } from '../utils/Logger';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,7 +21,9 @@ class CharacterController {
 
 	private initializeRoutes() {
 		this.router.get('/characters', this.handleGetCharacters);
+		this.router.get('/characters/character', this.handleGetCharacterInfo)
 		this.router.post('/createCharacter', this.handleCreateCharacter);
+		this.router.delete('/characters/character', this.deleteCharacter)
 		// Add more routes as needed
 	}
 
@@ -56,7 +58,7 @@ class CharacterController {
 
 	private handleGetCharacterInfo = async (req: Request, res: Response, next: NextFunction) => {
 		try{
-			const {error, value} = getReqCharacters(req.headers);
+			const {error, value} = getReqCharacterInfo(req.headers);
 			if (error) {
 				this.logger.error('Error', error);
 				return res.sendStatus(400);
@@ -103,6 +105,43 @@ class CharacterController {
 			const error = new CustomError(err.message, 500)
 			next(error)
 		}
+	}
+
+	private deleteCharacter = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { error, value } = deleteReqCharacter(req.headers);
+			if (error) {
+				this.logger.error('Error', error);
+				return res.sendStatus(400);
+			} else {
+				this.logger.info('Success', value);
+			}
+
+			const characterId = req.headers['character-id']
+			const userId = req.headers['user-id']
+
+			if(characterId === '' || typeof characterId !== 'string') {
+				this.logger.error('Character ID is missing from request')
+				throw new CustomError('Character ID is missing from request', 400)
+			}
+
+			if(userId === '' || typeof userId !== 'string') {
+				this.logger.error('User ID is missing from request')
+				throw new CustomError('User ID is missing from request', 400)
+			}
+
+			const result = await this.characterService.deleteCharacter(characterId, userId, this.correlationId)
+			res.status(200).json(result);
+		} catch(err: any) {
+			this.logger.error(`Error has occured at deleteCharacter with correlationId ${this.correlationId} and error ${err}`)
+			if (err instanceof CustomError) {
+				next(err)
+			}
+			const error = new CustomError(err.message, 500)
+			next(error)
+		}
+	
+		
 	}
 
 	public getRouter(): Router {

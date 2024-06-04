@@ -1,3 +1,4 @@
+import { Character, CharacterSpell, ClassFeature } from "@prisma/client";
 import { saveCharacterDto } from "../dtos/saveCharacterDtos";
 import { Logger } from "../utils/Logger";
 import { BackgroundEnum, RaceEnum, SkillEnum } from "../utils/constants";
@@ -44,4 +45,47 @@ export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logge
     logger.error(`saveCharacter mapping failed, ${error}`)
     throw error
   }
+}
+
+export const mapCharacterInfo = (characterInfo, logger, correlationId) => {
+  logger.info(`Mapping character information for character ${characterInfo.characterName} with correlationId ${correlationId}`)
+  const character = {
+    playerName: characterInfo.playerName,
+    characterName: characterInfo.characterName,
+    level: characterInfo.level,
+    currentSpeed: characterInfo.currentSpeed,
+    armourClass: characterInfo.armourClass,
+    maxHitPoints: characterInfo.maxHitPoints,
+    currentHitPoints: characterInfo.currentHitPoints,
+    tempHitPoints: characterInfo.tempHitPoints,
+    proficiencyBonus: characterInfo.proficiencyBonus,
+    alignment: characterInfo.alignment,
+    attributeArray: characterInfo.attributeArray,
+    skillsArray: characterInfo.skillsArray,
+  }
+  return character
+}
+
+
+export const mapCharacterSheetInfo = (characterData: Character, infoObj, logger: Logger, correlationId: string) => {
+  logger.info(`Mapping character sheet for character ${characterData.characterName} with correlationId ${correlationId}`)
+  const mappedCharacterSheet ={
+    playerName: characterData.playerName,
+    characterName: characterData.characterName,
+    level: characterData.level,
+    currentSpeed: characterData.currentSpeed,
+    armourClass: characterData.armourClass,
+    maxHitPoints: characterData.maxHitPoints,
+    currentHitPoints: characterData.currentHitPoints,
+    tempHitPoints: characterData.tempHitPoints,
+    proficiencyBonus: characterData.proficiencyBonus,
+    alignment: characterData.alignment,
+    attributeArray: characterData.attributeArray,
+    skillsArray: characterData.skillArray,
+    background: infoObj.backgroundInfo,
+    race: infoObj.raceInfo,
+    class: infoObj.classInfo,
+    activeSpells: infoObj.activeSpells
+  }
+  return mappedCharacterSheet
 }

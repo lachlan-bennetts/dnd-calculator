@@ -1,7 +1,7 @@
 import { saveCharacterDto } from "../dtos/saveCharacterDtos";
 import { Logger } from "../utils/Logger"
 import { CharacterRepository } from "../repositories/CharacterRepository";
-import { saveCharacterMapper } from "../mapper/CharacterMapper";
+import { mapCharacterInfo, mapCharacterSheetInfo, saveCharacterMapper } from "../mapper/CharacterMapper";
 import { ClassRepository } from "../repositories/ClassRepository";
 import { CharacterClassRepository } from "../repositories/CharacterClassRepository";
 import { mapNewCharacterClass } from "../mapper/CharacterClassMapper";
@@ -9,7 +9,23 @@ import { UserRepository } from "../repositories/UserRepository";
 import { CustomError } from "../utils/CustomError";
 import { AttributeEnum, ClassEnum, SpellcastingClasses, spellSlots } from "../utils/constants";
 import { inspect } from "util";
+import { SpellRepository } from "../repositories/ActiveSpellRepository";
+import { ICharacterRaceInfo, RaceService } from "./RaceService";
+import { ClassService } from "./ClassService";
+import { ICharacterBackground, mapCharacterBackgroundInfo } from "../mapper/BackgroundMapper";
+import { SpellService } from "./SpellService";
 
+export interface ICharacterAux {
+  raceInfo: ICharacterRaceInfo,
+  classInfo: any,
+  backgroundInfo: ICharacterBackground,
+  activeSpells: any
+}
+
+export interface IDelPayload {
+  userId: string,
+  characterId: string
+}
 
 export class CharacterService {
   private characterRepository: CharacterRepository;
@@ -17,12 +33,18 @@ export class CharacterService {
   private logger: Logger;
   private characterClassRepository: CharacterClassRepository;
   private userRepository: UserRepository;
+  private classService: ClassService
+  private raceService: RaceService;
+  private spellService: SpellService;
 
   constructor() {
     this.characterRepository = new CharacterRepository();
     this.classRepository = new ClassRepository();
     this.characterClassRepository = new CharacterClassRepository();
     this.userRepository = new UserRepository()
+    this.classService = new ClassService()
+    this.raceService = new RaceService()
+    this.spellService = new SpellService()
     this.logger = new Logger();
   }
 
@@ -68,7 +90,8 @@ export class CharacterService {
       console.log("New Character Class Temp", newCharacterClassTemp)
       await this.characterClassRepository.saveCharacterClass(newCharacterClassTemp, this.logger, correlationId)
       return {
-        message: "Character created successfully"
+        message: "Character created successfully",
+        characterId: characterId
       }
     } catch(error) {
       this.logger.error(`An error has occured, ${error}`)
@@ -134,11 +157,68 @@ export class CharacterService {
   async getCharacterInfo(characterId: string, correlationId: string) {
     try {
       this.logger.info(`Commencing getCharacterInfo within CharacterService with correlationId ${correlationId}`)
-      const characterInfo = await this.characterRepository.retrieveCharacterInfo(characterId, this.logger, correlationId)
-      this.logger.info(`CharacterInfo retrieved successfully with correlationId ${correlationId}, ${inspect(characterInfo)}`)
-  } catch(err: any) {
+      const characterData = await this.characterRepository.retrieveCharacterInfo(characterId, this.logger, correlationId)      
+      if (!characterData || characterData === null) {
+        this.logger.error(`Character does not exist with characterId ${characterId} and correlationId ${correlationId}`)
+        throw new CustomError("Character does not exist", 404)
+      }
+      this.logger.info(`characterData retrieved successfully with correlationId ${correlationId}, ${inspect(characterData)}`)
+
+      // Need to display class Spells and Abilities. Spells can be easily done through active Spells table
+      const characterClassIds = characterData.characterClasses.map((characterClass) => characterClass.characterClassId)
+      const classNames = characterData.characterClasses.map((characterClass) => characterClass.className)
+
+      const backgroundInfo = mapCharacterBackgroundInfo(characterData.background, this.logger, correlationId)
+      const raceInfo = await this.raceService.collectRelevantRaceData(characterData.subRace, characterData.level, correlationId) 
+      const classInfoObj = await this.classService.retrieveClassInfo(classNames, characterData.characterClasses, correlationId)
+      const activeSpells = await this.spellService.mapActiveSpells(characterClassIds, correlationId)
+
+      const infoObj: ICharacterAux = {
+        raceInfo,
+        classInfo: classInfoObj,
+        backgroundInfo,
+        activeSpells
+      }
+
+      const characterInfoResponse = mapCharacterSheetInfo(characterData, infoObj, this.logger, correlationId)
+
+      return characterInfoResponse
+    }
+
+   catch(err: any) {
     this.logger.error(`An error has occured in getCharacterInfo with correlationId ${correlationId} and error ${err}`)
     throw err
+    }
+  }
+
+
+  async deleteCharacter(characterId: string, userId: string, correlationId: string) {
+    try {
+      this.logger.info(`Commencing deleteCharacter within CharacterService with correlationId ${correlationId}`)
+      const characterEntity = await this.characterRepository.retrieveCharacterInfo(characterId, this.logger, correlationId)
+      if(!characterEntity) {
+        this.logger.error(`Character does not exist with characterId ${characterId} and correlationId ${correlationId}`)
+        throw new CustomError("Character does not exist", 404)
+      }
+      if(characterEntity.userId !== userId) {
+        this.logger.error(`User does not own character with characterId ${characterId} and correlationId ${correlationId}`)
+        throw new CustomError("User does not own character", 403)
+      }
+
+      this.logger.info(`Deleting characterClass with characterId ${characterId} and correlationId ${correlationId}`)
+      const characterClassIds = characterEntity.characterClasses.map((characterClass) => characterClass.characterClassId)
+      await this.characterClassRepository.deleteCharacterClasses(characterClassIds, this.logger, correlationId)
+      this.logger.info(`CharacterClass deleted successfully with characterId ${characterId} and correlationId ${correlationId}`)
+
+      this.logger.info(`Deleting character with characterId ${characterId} and correlationId ${correlationId}`)
+      await this.characterRepository.deleteCharacter(characterId, this.logger, correlationId)
+      this.logger.info(`Character deleted successfully with characterId ${characterId} and correlationId ${correlationId}`)
+      return {
+        message: "Character deleted successfully"
+      }
+    } catch(err: any) {
+      this.logger.error(`An error has occured in deleteCharacter with correlationId ${correlationId} and error ${err}`)
+      throw err
     }
   }
 }

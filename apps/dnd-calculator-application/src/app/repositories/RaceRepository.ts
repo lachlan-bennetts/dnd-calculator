@@ -1,4 +1,5 @@
 import { PrismaClient, Race } from "@prisma/client";
+import { Logger } from "../utils/Logger";
 
 export class RaceRepository {
   private prisma: PrismaClient;
@@ -14,5 +15,22 @@ export class RaceRepository {
       },
     })
     return retrievedRace
+  }
+
+  async retrieveRaceAndFeatures(raceName: string, logger: Logger, correlationId: string) {
+    try {
+      const raceAndFeatures = await this.prisma.race.findFirst({
+        where: {
+          subRace: raceName
+        },
+        include: {
+          features: true
+        }
+      })
+      return raceAndFeatures
+    } catch(err) {
+      logger.error(`Error retrieving raceData from raceName ${raceName} with correlationId ${correlationId}`)
+      throw err
+    }
   }
 }

@@ -18,10 +18,9 @@ export class ClassRepository {
     return retrievedClass
   }
 
-  async  retrieveClassAndFeatures(classNames: string[], logger: Logger, correlationId: string): Promise<Class[]> {
-    logger.info(`Getting classes for ${classNames} and correlationId ${correlationId}`)
+  async retrieveClassesByNames(classNames: string[], logger: Logger, correlationId: string) {
     try {
-      const getClasses = await this.prisma.class.findMany({
+      const retrievedClasses = await this.prisma.class.findMany({
         where: {
           className: {
             in: classNames
@@ -31,10 +30,10 @@ export class ClassRepository {
           classFeatures: true
         }
       })
-      return getClasses
-    } catch (error) {
-      logger.error(`Error getting classes for ${classNames} and correlationId ${correlationId}`)
-      throw error
+      return retrievedClasses
+    } catch(err) {
+      logger.error(`Error getting classes for names ${classNames} and correlationId ${correlationId}, ${err}`)
+      throw err
     }
   }
 }

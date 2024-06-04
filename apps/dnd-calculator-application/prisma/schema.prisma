@@ -57,6 +57,7 @@ model Race {
 model RaceFeature {
   raceFeatureId String @id @default(cuid())
   name String
+  level Int
   description String
   race Race[]
   createdAt DateTime @default(now())
@@ -83,12 +84,11 @@ model Class {
 }
 
 model ClassFeature {
-  id String @id @default(cuid())
-  name String
-  description String
-  class String
+  classFeatureId String @id @default(cuid())
+  featureName String
+  featureDescription String
   subclass String?
-  level Int
+  featureLevel Int
   Class Class @relation(fields: [className], references: [className])
   className String
   createdAt DateTime @default(now())
@@ -125,7 +125,7 @@ model CharacterSpell {
 
 model Background {
   backgroundName String @unique @id
-  description String
+  backgroundDescription String
   skillProficiencies String[]
   toolProficiencies String[]
   toolTypeProficiencies String[] @default([])
@@ -239,11 +239,12 @@ model Spell {
   range Int
   areaOfEffect String
   components String
-  duration Int
+  duration Int?
   description String
   damageType String
   monster Monster[]
-  class Class[]
+  class Class @relation(fields: [className], references: [className])
+  className String @unique
   characterSpells CharacterSpell[]
   damageDieType Int
   damageDieNumber Int
