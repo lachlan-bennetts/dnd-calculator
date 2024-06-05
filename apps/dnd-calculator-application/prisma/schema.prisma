@@ -70,7 +70,7 @@ model Class {
   weaponProficiencies String[]
   armourProficiencies String[]
   availableToolProficencies String[] @default([])
-  spells Spell[]
+  spells Spell[] @relation("ClassSpells")
   classFeatures ClassFeature[]
   characterClasses CharacterClass[]
   availableSkillProficiencies String[]
@@ -115,8 +115,8 @@ model CharacterSpell {
   id String @id @default(cuid())
   characterClass CharacterClass @relation(fields: [characterClassId], references: [characterClassId])
   characterClassId String
-  spell Spell @relation(fields: [spellId], references: [spellId])
-  spellId String
+  spell Spell @relation(fields: [spellName], references: [spellName])
+  spellName String
   active Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -231,26 +231,32 @@ model Monster {
 }
 
 model Spell {
-  spellId String @id @default(cuid())
-  name String
-  level Int
+  spellName String @unique @id
+  spellLevel Int
   school String
-  castingTime Int
+  actionCastingTime Int @default(0)
+  bonusActionCasting Boolean @default(false)
+  selfCasting Boolean @default(false)
+  touchCasting Boolean @default(false)
   range Int
-  areaOfEffect String
-  components String
-  duration Int?
-  description String
-  damageType String
-  monster Monster[]
-  class Class @relation(fields: [className], references: [className])
-  className String @unique
+  areaOfEffect Int[] @default([])
+  components String[]
+  roundDuration Int @default(0)
+  spellDescription String
+  concentration Boolean @default(false)
+  multiTarget Boolean @default(false)
+  multiTargetProximity Int @default(0)
+  sightRequired Boolean @default(false)
+  spellType String
+  damageType String @default("")
+  dieType Int @default(0)
+  dieNumber Int @default(0)
+  spellSave String @default("")
+  attackType String @default("")
+  tags String[]
+  monsters Monster[]
+  classes Class[] @relation("ClassSpells")
   characterSpells CharacterSpell[]
-  damageDieType Int
-  damageDieNumber Int
-  damageBonus Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 

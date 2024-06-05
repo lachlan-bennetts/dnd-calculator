@@ -1,8 +1,6 @@
 import { ClassFeatureRepository } from "../repositories/ClassFeatureRepository"
 import { Logger } from "../utils/Logger";
-import { CustomError } from "../utils/CustomError";
-import { inspect } from "util";
-import { CharacterClass, ClassFeature } from "@prisma/client";
+import { CharacterClass } from "@prisma/client";
 import { IClassFeature } from "./ClassService";
 
 

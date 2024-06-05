@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { cantripSeed } from "./cantripData";
 
 const prisma = new PrismaClient();
 
@@ -834,6 +835,16 @@ async function main() {
       }
     ]
   })
+
+  const seedCantrips = cantripSeed.forEach(async (cantrip) => {
+    const cantripSeed = await prisma.spell.create({
+      data: cantrip
+    })
+    return cantripSeed
+  })
+  
+  seedCantrips
+
 
   console.log(`Seed complete`)
 

@@ -103,7 +103,7 @@ CREATE TABLE "CharacterClass" (
 CREATE TABLE "CharacterSpell" (
     "id" TEXT NOT NULL,
     "characterClassId" TEXT NOT NULL,
-    "spellId" TEXT NOT NULL,
+    "spellName" TEXT NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -224,25 +224,31 @@ CREATE TABLE "Monster" (
 
 -- CreateTable
 CREATE TABLE "Spell" (
-    "spellId" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "level" INTEGER NOT NULL,
+    "spellName" TEXT NOT NULL,
+    "spellLevel" INTEGER NOT NULL,
     "school" TEXT NOT NULL,
-    "castingTime" INTEGER NOT NULL,
+    "actionCastingTime" INTEGER NOT NULL DEFAULT 0,
+    "bonusActionCasting" BOOLEAN NOT NULL DEFAULT false,
+    "selfCasting" BOOLEAN NOT NULL DEFAULT false,
+    "touchCasting" BOOLEAN NOT NULL DEFAULT false,
     "range" INTEGER NOT NULL,
-    "areaOfEffect" TEXT NOT NULL,
-    "components" TEXT NOT NULL,
-    "duration" INTEGER,
-    "description" TEXT NOT NULL,
-    "damageType" TEXT NOT NULL,
-    "className" TEXT NOT NULL,
-    "damageDieType" INTEGER NOT NULL,
-    "damageDieNumber" INTEGER NOT NULL,
-    "damageBonus" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "areaOfEffect" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+    "components" TEXT[],
+    "roundDuration" INTEGER NOT NULL DEFAULT 0,
+    "spellDescription" TEXT NOT NULL,
+    "concentration" BOOLEAN NOT NULL DEFAULT false,
+    "multiTarget" BOOLEAN NOT NULL DEFAULT false,
+    "multiTargetProximity" INTEGER NOT NULL DEFAULT 0,
+    "sightRequired" BOOLEAN NOT NULL DEFAULT false,
+    "spellType" TEXT NOT NULL,
+    "damageType" TEXT NOT NULL DEFAULT '',
+    "dieType" INTEGER NOT NULL DEFAULT 0,
+    "dieNumber" INTEGER NOT NULL DEFAULT 0,
+    "spellSave" TEXT NOT NULL DEFAULT '',
+    "attackType" TEXT NOT NULL DEFAULT '',
+    "tags" TEXT[],
 
-    CONSTRAINT "Spell_pkey" PRIMARY KEY ("spellId")
+    CONSTRAINT "Spell_pkey" PRIMARY KEY ("spellName")
 );
 
 -- CreateTable
@@ -259,6 +265,12 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "_RaceToRaceFeature" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_ClassSpells" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
@@ -282,7 +294,7 @@ CREATE UNIQUE INDEX "Background_backgroundName_key" ON "Background"("backgroundN
 CREATE UNIQUE INDEX "Item_name_key" ON "Item"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Spell_className_key" ON "Spell"("className");
+CREATE UNIQUE INDEX "Spell_spellName_key" ON "Spell"("spellName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
@@ -295,6 +307,12 @@ CREATE UNIQUE INDEX "_RaceToRaceFeature_AB_unique" ON "_RaceToRaceFeature"("A", 
 
 -- CreateIndex
 CREATE INDEX "_RaceToRaceFeature_B_index" ON "_RaceToRaceFeature"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ClassSpells_AB_unique" ON "_ClassSpells"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ClassSpells_B_index" ON "_ClassSpells"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_MonsterToSpell_AB_unique" ON "_MonsterToSpell"("A", "B");
@@ -315,7 +333,7 @@ ALTER TABLE "CharacterClass" ADD CONSTRAINT "CharacterClass_className_fkey" FORE
 ALTER TABLE "CharacterSpell" ADD CONSTRAINT "CharacterSpell_characterClassId_fkey" FOREIGN KEY ("characterClassId") REFERENCES "CharacterClass"("characterClassId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterSpell" ADD CONSTRAINT "CharacterSpell_spellId_fkey" FOREIGN KEY ("spellId") REFERENCES "Spell"("spellId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CharacterSpell" ADD CONSTRAINT "CharacterSpell_spellName_fkey" FOREIGN KEY ("spellName") REFERENCES "Spell"("spellName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Character" ADD CONSTRAINT "Character_backgroundName_fkey" FOREIGN KEY ("backgroundName") REFERENCES "Background"("backgroundName") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -333,16 +351,19 @@ ALTER TABLE "HeldItem" ADD CONSTRAINT "HeldItem_characterId_fkey" FOREIGN KEY ("
 ALTER TABLE "HeldItem" ADD CONSTRAINT "HeldItem_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("itemId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Spell" ADD CONSTRAINT "Spell_className_fkey" FOREIGN KEY ("className") REFERENCES "Class"("className") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "_RaceToRaceFeature" ADD CONSTRAINT "_RaceToRaceFeature_A_fkey" FOREIGN KEY ("A") REFERENCES "Race"("subRace") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_RaceToRaceFeature" ADD CONSTRAINT "_RaceToRaceFeature_B_fkey" FOREIGN KEY ("B") REFERENCES "RaceFeature"("raceFeatureId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "_ClassSpells" ADD CONSTRAINT "_ClassSpells_A_fkey" FOREIGN KEY ("A") REFERENCES "Class"("className") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ClassSpells" ADD CONSTRAINT "_ClassSpells_B_fkey" FOREIGN KEY ("B") REFERENCES "Spell"("spellName") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "_MonsterToSpell" ADD CONSTRAINT "_MonsterToSpell_A_fkey" FOREIGN KEY ("A") REFERENCES "Monster"("monsterId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_MonsterToSpell" ADD CONSTRAINT "_MonsterToSpell_B_fkey" FOREIGN KEY ("B") REFERENCES "Spell"("spellId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_MonsterToSpell" ADD CONSTRAINT "_MonsterToSpell_B_fkey" FOREIGN KEY ("B") REFERENCES "Spell"("spellName") ON DELETE CASCADE ON UPDATE CASCADE;
