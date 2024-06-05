@@ -237,7 +237,7 @@ CREATE TABLE "Spell" (
     "roundDuration" INTEGER NOT NULL DEFAULT 0,
     "spellDescription" TEXT NOT NULL,
     "concentration" BOOLEAN NOT NULL DEFAULT false,
-    "multiTarget" BOOLEAN NOT NULL DEFAULT false,
+    "TargetNumber" INTEGER NOT NULL DEFAULT 1,
     "multiTargetProximity" INTEGER NOT NULL DEFAULT 0,
     "sightRequired" BOOLEAN NOT NULL DEFAULT false,
     "spellType" TEXT NOT NULL,

@@ -234,6 +234,7 @@ model Spell {
   spellName String @unique @id
   spellLevel Int
   school String
+  enhancement String @default("")
   actionCastingTime Int @default(0)
   bonusActionCasting Boolean @default(false)
   selfCasting Boolean @default(false)
@@ -244,7 +245,8 @@ model Spell {
   roundDuration Int @default(0)
   spellDescription String
   concentration Boolean @default(false)
-  multiTarget Boolean @default(false)
+  ritual Boolean @default(false)
+  targetNumber Int @default(1)
   multiTargetProximity Int @default(0)
   sightRequired Boolean @default(false)
   spellType String

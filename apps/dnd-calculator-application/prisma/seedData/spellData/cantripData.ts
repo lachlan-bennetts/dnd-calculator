@@ -8,6 +8,8 @@ const acidSplash =
       actionCastingTime: 1,
       range: 60,
       components: ['V', 'S'],
+      targetNumber: 2,
+      targetProximity: 5,
       classes: {
         connect: [
           {className: "Wizard"},
