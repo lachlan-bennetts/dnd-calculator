@@ -1,4 +1,4 @@
-# DndCalculator
+# Dnd Encounter Application.
 
 ## Setting Up Dnd-Calculator.
 First and foremost you will need some software installed on your computer before you start. Make sure you have the following installed on your system.
