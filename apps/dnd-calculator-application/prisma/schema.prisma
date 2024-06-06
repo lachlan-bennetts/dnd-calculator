@@ -235,7 +235,7 @@ model Spell {
   spellLevel Int
   school String
   enhancement String @default("")
-  actionCastingTime Int @default(0)
+  actionCastingTime Int @default(1)
   bonusActionCasting Boolean @default(false)
   selfCasting Boolean @default(false)
   touchCasting Boolean @default(false)
@@ -247,6 +247,7 @@ model Spell {
   spellDescription String
   concentration Boolean @default(false)
   ritual Boolean @default(false)
+  targetType String @default("Any")
   targetNumber Int @default(1)
   multiTargetProximity Int @default(0)
   sightRequired Boolean @default(false)
