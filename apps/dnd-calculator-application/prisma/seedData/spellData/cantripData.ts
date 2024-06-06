@@ -123,7 +123,7 @@ const eldritchBlast =  {
     spellDescription: `A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target.
     On a hit, the target takes 1d10 force damage.`,
     spellLevel: 0,
-    enhancement: 'missileIncrease',
+    enhancement: 'targetIncrease',
     school: 'Evocation',
     actionCastingTime: 1,
     range: 120,

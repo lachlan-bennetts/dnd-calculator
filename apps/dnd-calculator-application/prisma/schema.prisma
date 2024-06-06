@@ -240,6 +240,7 @@ model Spell {
   selfCasting Boolean @default(false)
   touchCasting Boolean @default(false)
   range Int
+  areaOfEffectType String @default("None")
   areaOfEffect Int[] @default([])
   components String[]
   roundDuration Int @default(0)
@@ -253,7 +254,7 @@ model Spell {
   damageType String @default("")
   dieType Int @default(0)
   dieNumber Int @default(0)
-  spellSave String @default("")
+  spellSave String @default("None")
   attackType String @default("")
   tags String[]
   monsters Monster[]
