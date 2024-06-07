@@ -1,8 +1,8 @@
 import { Logger } from "../utils/Logger"
 
 
-export const mapLearntSpells = (learntSpells, logger: Logger, correlationId: string) => {
-  logger.info(`Mapping character Spells with correlationId ${correlationId}`)
+export const mapLearntSpells = (learntSpells, logger: Logger) => {
+  logger.info(`Mapping character Spells `)
   console.log(learntSpells)
   const allSpells = learntSpells.map((learntSpell) => {
     const minDamage = 1*(learntSpell.spell.damageNum)
@@ -28,7 +28,7 @@ export const mapLearntSpells = (learntSpells, logger: Logger, correlationId: str
   const activeSpells = allSpells.filter((spell) => {
     return spell.active === true
   })
-  const classSpells = categoriseSpellsByClass(allSpells, logger, correlationId)
+  const classSpells = categoriseSpellsByClass(allSpells, logger)
 
 
   const mappedSpells = {
@@ -39,8 +39,8 @@ export const mapLearntSpells = (learntSpells, logger: Logger, correlationId: str
 }
 
 
-const categoriseSpellsByClass = (allSpells, logger: Logger, correlationId: string) => {
-  logger.info(`Categorising spells by class with correlationId ${correlationId}`)
+const categoriseSpellsByClass = (allSpells, logger: Logger) => {
+  logger.info(`Categorising spells by class `)
   const spellsByClass = allSpells.reduce((acc, spell) => {
     if(!acc[spell.spellClass]) {
       acc[spell.spellClass] = []

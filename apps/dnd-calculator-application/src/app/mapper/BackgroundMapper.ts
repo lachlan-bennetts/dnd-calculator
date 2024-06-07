@@ -27,8 +27,8 @@ export interface ICharacterBackground {
 }
 
 
-export const mapCharacterBackgroundInfo = (background: IBackground, logger: Logger, correlationId): ICharacterBackground => {
-  logger.info(`Mapping background info with correlationId ${correlationId}`)
+export const mapCharacterBackgroundInfo = (background: IBackground, logger: Logger): ICharacterBackground => {
+  logger.info(`Mapping background info `)
   const backgroundInfo = {
     backgroundName: background.backgroundName,
     backgroundDescription: background.backgroundDescription,

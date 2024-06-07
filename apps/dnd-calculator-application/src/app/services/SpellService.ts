@@ -6,19 +6,19 @@ export class SpellService {
   spellRepository: SpellRepository;
   logger: Logger
 
-  constructor() {
+  constructor(inheritLogger: Logger) {
+    this.logger = inheritLogger
     this.spellRepository = new SpellRepository()
-    this.logger = new Logger()
   }
 
-  async mapActiveSpells(characterClassIds: string[], correlationId: string) {
+  async mapActiveSpells(characterClassIds: string[]) {
     try {
-      this.logger.info(`Commencing retrieveActiveSpells within SpellService with correlationId ${correlationId}`)
-      const retrievedSpells = await this.spellRepository.retrieveActiveSpells(characterClassIds, this.logger, correlationId)
-      const mappedSpells = mapLearntSpells(retrievedSpells, this.logger, correlationId)
+      this.logger.info(`Commencing retrieveActiveSpells within SpellService `)
+      const retrievedSpells = await this.spellRepository.retrieveActiveSpells(characterClassIds, this.logger)
+      const mappedSpells = mapLearntSpells(retrievedSpells, this.logger)
       return mappedSpells
     } catch(err) {
-      this.logger.error(`An error has occured in mapActiveSpells with correlationId ${correlationId}, ${err}`)
+      this.logger.error(`An error has occurred in mapActiveSpells , ${err}`)
       throw err
     }
   }

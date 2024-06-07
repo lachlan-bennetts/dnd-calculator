@@ -9,13 +9,11 @@ class CharacterController {
 	private router: Router;
 	private characterService: CharacterService;
 	private logger: Logger
-	private correlationId: string
 
 	constructor() {
 		this.router = express.Router();
-		this.characterService = new CharacterService()
 		this.logger = new Logger()
-		this.correlationId = uuidv4()
+		this.characterService = new CharacterService(this.logger)
 		this.initializeRoutes();
 	}
 
@@ -40,14 +38,14 @@ class CharacterController {
 			const userId = req.headers['user-id']
 
 			if(userId === '' || typeof userId !== 'string') {
-				this.logger.error('User ID is missing from request')
+				this.logger.error('User ID is missing from request', error)
 				return res.sendStatus(400)
 			}
 
-			const result = await this.characterService.getCharacters(userId, this.correlationId)
+			const result = await this.characterService.getCharacters(userId)
 			res.status(200).json(result);
 		} catch(err: any) {
-		  this.logger.error(`Error has occured at handleGetCharacters with correlationId ${this.correlationId} and error ${err}`)
+		  this.logger.error(`Error has occurred at handleGetCharacters  and error ${err}`)
 			if (err instanceof CustomError) {
 				next(err)
 			}
@@ -73,10 +71,10 @@ class CharacterController {
 				throw new CustomError('Character ID is missing from request', 400)
 			}
 
-			const result = await this.characterService.getCharacterInfo(characterId, this.correlationId)
+			const result = await this.characterService.getCharacterInfo(characterId)
 			res.status(200).json(result);
 		} catch(err: any) {
-			this.logger.error(`Error has occured at handleGetCharacterInfo with correlationId ${this.correlationId} and error ${err}`)
+			this.logger.error(`Error has occurred at handleGetCharacterInfo  and error ${err}`)
 		  if (err instanceof CustomError) {
 				next(err)
 			}
@@ -95,10 +93,10 @@ class CharacterController {
 			  this.logger.info('Success', value);
 		  }
   
-		  const result = await this.characterService.createNewCharacter(req.body, this.correlationId)
+		  const result = await this.characterService.createNewCharacter(req.body)
 		  res.status(201).json(result);
 		} catch (err: any) {
-		  this.logger.error(`Error has occured at handleCreateCharacter with correlationId ${this.correlationId} and error ${err}`)
+		  this.logger.error(`Error has occurred at handleCreateCharacter  and error ${err}`)
 		  if (err instanceof CustomError) {
 				next(err)
 			}
@@ -130,10 +128,10 @@ class CharacterController {
 				throw new CustomError('User ID is missing from request', 400)
 			}
 
-			const result = await this.characterService.deleteCharacter(characterId, userId, this.correlationId)
+			const result = await this.characterService.deleteCharacter(characterId, userId)
 			res.status(200).json(result);
 		} catch(err: any) {
-			this.logger.error(`Error has occured at deleteCharacter with correlationId ${this.correlationId} and error ${err}`)
+			this.logger.error(`Error has occurred at deleteCharacter  and error ${err}`)
 			if (err instanceof CustomError) {
 				next(err)
 			}

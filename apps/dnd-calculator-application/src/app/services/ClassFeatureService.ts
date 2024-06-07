@@ -19,9 +19,9 @@ export class ClassFeatureService {
     this.logger = new Logger()
   }
 
-  mapActiveFeatures(charClasses: CharacterClass[], classFeatures: IClassFeature[][], correlationId: string) {
+  mapActiveFeatures(charClasses: CharacterClass[], classFeatures: IClassFeature[][]) {
     try {
-      this.logger.info(`Commencing fetchClassFeatures within CharacterService with correlationId ${correlationId}`)
+      this.logger.info(`Commencing fetchClassFeatures within CharacterService `)
       const classNamesAndLevels: IRetrieveClassFeatures[] = charClasses.map((characterClass) => {
         return {
           className: characterClass.className,
@@ -60,7 +60,7 @@ export class ClassFeatureService {
 
       
     } catch(err) {
-      this.logger.error(`An error has occured, ${err}`)
+      this.logger.error(`An error has occurred, ${err}`)
       throw err
     }
   }

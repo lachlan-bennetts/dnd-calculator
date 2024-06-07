@@ -14,8 +14,8 @@ export class AuthContoller {
     constructor() {
         this.router = express.Router();
         this.initializeRoutes();
-        this.authService = new AuthService();
         this.logger = new Logger();
+        this.authService = new AuthService(this.logger);
     }
 
     private initializeRoutes() {
@@ -34,21 +34,21 @@ export class AuthContoller {
       try {
         const { error, value } = postReqCreateUser(req.body);
         if(error) {
-          this.logger.error(`Error: ${error}`);
+          this.logger.error('Error has occurred in handleCreateUserReq', error);
           return res.sendStatus(400);
         } else {
           this.logger.info('Success');
         }
           const userInfo: CreateUserDto = req.body;
     
-          await this.authService.createUser(userInfo, this.logger);
+          await this.authService.createUser(userInfo);
           res.status(201).json({ message: 'User created successfully' });
         } catch (err: any) {
           console.log('Error', err);
           if (err instanceof CustomError) {
             next(err)
           }
-          const error = new CustomError('An error has occured in handleCreateUser', 500)
+          const error = new CustomError('An error has occurred in handleCreateUser', 500)
           next(error)
       }
     }

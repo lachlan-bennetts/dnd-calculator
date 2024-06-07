@@ -3,6 +3,7 @@ import { ClassRepository } from "../repositories/ClassRepository";
 import { Logger } from "../utils/Logger";
 import { CustomError } from "../utils/CustomError";
 import { ClassFeatureService } from "./ClassFeatureService";
+import { ClassEnum } from "../utils/constants";
 
 export interface IClassFeature {
   classFeatureId: string,
@@ -20,16 +21,16 @@ export class ClassService {
   private classRepository: ClassRepository
   private logger: Logger
 
-  constructor() {
+  constructor(inheritLogger: Logger) {
+    this.logger = inheritLogger
     this.classFeatureService = new ClassFeatureService()
     this.classRepository = new ClassRepository()
-    this.logger = new Logger()
   }
 
-  async retrieveClassInfo(classNames: string[], characterClasses: CharacterClass[], correlationId: string) {
-    const classesAndFeats = await this.classRepository.retrieveClassesByNames(classNames, this.logger, correlationId)
+  async retrieveClassInfo(classNames: string[], characterClasses: CharacterClass[]) {
+    const classesAndFeats = await this.classRepository.retrieveClassesByNames(classNames, this.logger)
     if(!classesAndFeats || classesAndFeats.length === 0) {
-      this.logger.error(`Classes do not exist with correlationId ${correlationId}`)
+      this.logger.error(`Classes do not exist `)
       throw new CustomError("Classes do not exist", 404)
     }
 
@@ -37,7 +38,7 @@ export class ClassService {
       return classObj.classFeatures
     })
     console.log("ALL CLASS FEATS", allClassFeatures)
-    const activeClassFeatures = this.classFeatureService.mapActiveFeatures(characterClasses, allClassFeatures, correlationId)
+    const activeClassFeatures = this.classFeatureService.mapActiveFeatures(characterClasses, allClassFeatures)
     console.log("ACTIVE CLASS FEATS", activeClassFeatures)
 
     const mappedResults = classesAndFeats.map((classEnt) => {
@@ -52,5 +53,14 @@ export class ClassService {
       return mappedClass
     })
     return mappedResults
+  }
+
+  async findClass(className: string) {
+    const retrievedClass = await this.classRepository.findClassByName(className)
+    if(!retrievedClass) {
+      this.logger.error(`Class ${className} does not exist`)
+      throw new CustomError("Class does not exist", 404)
+    }
+    return retrievedClass
   }
 }

@@ -8,9 +8,9 @@ export class ClassFeatureRepository {
     this.prisma = new PrismaClient()
   }
 
-  async retrieveClassFeatures(className: string[], logger: Logger, correlationId: string) {
+  async retrieveClassFeatures(className: string[], logger: Logger) {
     try {
-      logger.info(`Getting class features for class ${className} and correlationId ${correlationId}`)
+      logger.info(`Getting class features for class ${className}`)
       const classFeatures = await this.prisma.classFeature.findMany({
         where: {
           className: {
@@ -20,7 +20,7 @@ export class ClassFeatureRepository {
       })
       return classFeatures
     } catch(err) {
-      logger.error(`Error getting class features for class ${className} and correlationId ${correlationId}`)
+      logger.error(`Error getting class features for class ${className}`)
       throw err
     }
   }

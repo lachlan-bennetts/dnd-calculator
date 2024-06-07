@@ -1,7 +1,6 @@
-import { Character, CharacterSpell, ClassFeature } from "@prisma/client";
+import { Character } from "@prisma/client";
 import { saveCharacterDto } from "../dtos/saveCharacterDtos";
 import { Logger } from "../utils/Logger";
-import { BackgroundEnum, RaceEnum, SkillEnum } from "../utils/constants";
 
 export interface ISaveCharacter {
   playerName: string;
@@ -20,9 +19,9 @@ export interface ISaveCharacter {
   user: string;
 }
 
-export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logger, correlationId: string) => {
+export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logger) => {
   try {
-    logger.info('Commencing saveCharacter mapping from requestBody with correlationId: ' + correlationId)
+    logger.info('Commencing saveCharacter mapping from requestBody')
     const saveCharacterModel: ISaveCharacter = {
       playerName: requestBody.playerName,
       characterName: requestBody.characterName,
@@ -39,7 +38,7 @@ export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logge
       background: requestBody.background,
       user: requestBody.userId
     }
-    logger.info(`saveCharacter mapping successful with ${correlationId}`)
+    logger.info(`saveCharacter mapping successful`)
     return saveCharacterModel
   } catch(error: any) {
     logger.error(`saveCharacter mapping failed, ${error}`)
@@ -47,8 +46,8 @@ export const saveCharacterMapper = (requestBody: saveCharacterDto, logger: Logge
   }
 }
 
-export const mapCharacterInfo = (characterInfo, logger, correlationId) => {
-  logger.info(`Mapping character information for character ${characterInfo.characterName} with correlationId ${correlationId}`)
+export const mapCharacterInfo = (characterInfo, logger) => {
+  logger.info(`Mapping character information for character ${characterInfo.characterName} `)
   const character = {
     playerName: characterInfo.playerName,
     characterName: characterInfo.characterName,
@@ -67,8 +66,8 @@ export const mapCharacterInfo = (characterInfo, logger, correlationId) => {
 }
 
 
-export const mapCharacterSheetInfo = (characterData: Character, infoObj, logger: Logger, correlationId: string) => {
-  logger.info(`Mapping character sheet for character ${characterData.characterName} with correlationId ${correlationId}`)
+export const mapCharacterSheetInfo = (characterData: Character, infoObj, logger: Logger) => {
+  logger.info(`Mapping character sheet for character ${characterData.characterName} `)
   const mappedCharacterSheet ={
     playerName: characterData.playerName,
     characterName: characterData.characterName,

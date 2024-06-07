@@ -18,7 +18,7 @@ export class ClassRepository {
     return retrievedClass
   }
 
-  async retrieveClassesByNames(classNames: string[], logger: Logger, correlationId: string) {
+  async retrieveClassesByNames(classNames: string[], logger: Logger) {
     try {
       const retrievedClasses = await this.prisma.class.findMany({
         where: {
@@ -32,7 +32,7 @@ export class ClassRepository {
       })
       return retrievedClasses
     } catch(err) {
-      logger.error(`Error getting classes for names ${classNames} and correlationId ${correlationId}, ${err}`)
+      logger.error(`Error getting classes for names ${classNames}, ${err}`)
       throw err
     }
   }

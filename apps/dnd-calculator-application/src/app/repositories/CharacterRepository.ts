@@ -4,9 +4,11 @@ import { Logger } from "../utils/Logger";
 
 export class CharacterRepository {
   private prisma: PrismaClient;
+  private logger: Logger;
 
-  constructor() {
+  constructor(inheritLogger: Logger) {
     this.prisma = new PrismaClient()
+    this.logger = inheritLogger
   }
 
   async saveCharacter(characterInfo: ISaveCharacter) {
@@ -31,18 +33,23 @@ export class CharacterRepository {
     return saveNewCharacter
   }
 
-  async deleteCharacter(characterId: string, logger: Logger, correlationId: string) {
-    logger.info(`Deleting character with ${characterId} and correlationId ${correlationId}`)
-    const deleteCharacter = await this.prisma.character.delete({
-      where: {
-        characterId: characterId
-      }
-    })
-    return deleteCharacter
+  async deleteCharacter(characterId: string, logger: Logger) {
+    logger.info(`Deleting character with ${characterId}`)
+    try {
+      const deleteCharacter = await this.prisma.character.delete({
+        where: {
+          characterId: characterId
+        }
+      })
+      return deleteCharacter
+    } catch(err) {
+      logger.error(`Error deleting character with ${characterId}`)
+      throw err
+    }
   }
 
-  async retrieveCharacters(userId: string, logger: Logger, correlationId: string) {
-    logger.info(`Getting characters for user ${userId} and correlationId ${correlationId}`)
+  async retrieveCharacters(userId: string, logger: Logger) {
+    logger.info(`Getting characters for user ${userId}`)
     try {
       const getCharacters = await this.prisma.character.findMany({
         where: {
@@ -54,13 +61,13 @@ export class CharacterRepository {
       })
       return getCharacters
     } catch (error) {
-      logger.error(`Error getting characters for user ${userId} and correlationId ${correlationId}`)
+      logger.error(`Error getting characters for user ${userId}`)
       throw error
     }
   }
 
-  async retrieveCharacterInfo(characterId: string, logger: Logger, correlationId: string) {
-    logger.info(`Getting character info for character ${characterId} and correlationId ${correlationId}`)
+  async retrieveCharacterInfo(characterId: string, logger: Logger) {
+    logger.info(`Getting character info for character ${characterId}`)
     try {
       const getCharacter = await this.prisma.character.findFirst({
         where: {
@@ -69,19 +76,19 @@ export class CharacterRepository {
         include: {
           characterClasses: true,
           inventory: true,
-          race: true,
+          race: true,         
           background: true,
         }
       })
       return getCharacter
-    } catch (error) {
-      logger.error(`Error getting character info for character ${characterId} and correlationId ${correlationId}`)
-      throw error
+    } catch (err) {
+      logger.error(`Error getting character info for character ${characterId}`)
+      throw err
     }
   }
 
-  async retrieveCharacterNames(userId: string, logger: Logger, correlationId: string) {
-    logger.info(`Getting characters with retrieveCharacters Method for user ${userId} and correlationId ${correlationId}`)
+  async retrieveCharacterNames(userId: string, logger: Logger) {
+    logger.info(`Getting characters with retrieveCharacters Method for user ${userId}`)
     try{
       const characterNames = await this.prisma.character.findMany({
         where: {
@@ -92,9 +99,9 @@ export class CharacterRepository {
         }
       })
       return characterNames.map((character) => character.characterName)
-    } catch (error) {
-      logger.error(`Error getting character names for user ${userId} and correlationId ${correlationId}`)
-      throw error
+    } catch (err) {
+      logger.error(`Error getting character names for user ${userId}`)
+      throw err
     }
   }
 }

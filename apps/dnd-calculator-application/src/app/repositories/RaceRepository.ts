@@ -17,7 +17,7 @@ export class RaceRepository {
     return retrievedRace
   }
 
-  async retrieveRaceAndFeatures(raceName: string, logger: Logger, correlationId: string) {
+  async retrieveRaceAndFeatures(raceName: string, logger: Logger) {
     try {
       const raceAndFeatures = await this.prisma.race.findFirst({
         where: {
@@ -29,7 +29,7 @@ export class RaceRepository {
       })
       return raceAndFeatures
     } catch(err) {
-      logger.error(`Error retrieving raceData from raceName ${raceName} with correlationId ${correlationId}`)
+      logger.error(`Error retrieving raceData from raceName ${raceName} `)
       throw err
     }
   }

@@ -8,9 +8,9 @@ export class SpellRepository {
     this.prisma = new PrismaClient()
   }
 
-  async retrieveActiveSpells(characterClassIds: string[], logger: Logger, correlationId: string) {
+  async retrieveActiveSpells(characterClassIds: string[], logger: Logger) {
     try {
-      logger.info(`Getting active spells for class ${characterClassIds} and correlationId ${correlationId}`)
+      logger.info(`Getting active spells for class ${characterClassIds}`)
       const activeSpells = await this.prisma.characterSpell.findMany({
         where: {
           characterClassId: {
@@ -23,7 +23,7 @@ export class SpellRepository {
       })
       return activeSpells
     } catch(err) {
-      logger.error(`Error getting active spells for class ${characterClassIds} and correlationId ${correlationId}`)
+      logger.error(`Error getting active spells for class ${characterClassIds}`)
       throw err
     }
   }

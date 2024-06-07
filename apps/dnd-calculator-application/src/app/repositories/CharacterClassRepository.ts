@@ -9,8 +9,8 @@ export class CharacterClassRepository {
     this.prisma = new PrismaClient();
   }
 
-  async saveCharacterClass(saveCharacterClassTemplate: ISaveCharacterClass, logger: Logger, correlationId: string) {
-    logger.info(`Commencing saveCharacterClass within CharacterClassRepository with correlationId ${correlationId}`, saveCharacterClassTemplate);
+  async saveCharacterClass(saveCharacterClassTemplate: ISaveCharacterClass, logger: Logger) {
+    logger.info(`Commencing saveCharacterClass within CharacterClassRepository `, saveCharacterClassTemplate);
     const saveCharacterClass = await this.prisma.characterClass.create({
       data: saveCharacterClassTemplate
     });
@@ -18,8 +18,8 @@ export class CharacterClassRepository {
     return saveCharacterClass;
   }
 
-  async deleteCharacterClasses(characterClassId: string[], logger: Logger, correlationId: string) {
-    logger.info(`Commencing deleteCharacterClass within CharacterClassRepository with correlationId ${correlationId}`, characterClassId);
+  async deleteCharacterClasses(characterClassId: string[], logger: Logger) {
+    logger.info(`Commencing deleteCharacterClass within CharacterClassRepository `, characterClassId);
     const deleteCharacterClass = await this.prisma.characterClass.deleteMany({
       where: {
         characterClassId: {
