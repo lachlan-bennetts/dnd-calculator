@@ -34,4 +34,12 @@ export class UserRepository {
       }
     });
   }
+
+  async retrieveUserByUsername(username: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        username: username
+      }
+    });
+  }
 }

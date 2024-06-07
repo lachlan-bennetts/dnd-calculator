@@ -79,8 +79,7 @@ model Class {
   spellCastingAttribute String?
   savingThrowProficiencies String[]
   recommendedStandardArray Int[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  subClassStart Int @default(3)
 }
 
 model ClassFeature {
@@ -91,8 +90,6 @@ model ClassFeature {
   featureLevel Int
   Class Class @relation(fields: [className], references: [className])
   className String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model CharacterClass {

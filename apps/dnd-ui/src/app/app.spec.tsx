@@ -1,25 +1,9 @@
-import { render } from '@testing-library/react';
+import React from 'react';
+import { render } from '@testing-library/react-native';
 
-import { BrowserRouter } from 'react-router-dom';
+import App from './App';
 
-import App from './app';
-
-describe('App', () => {
-  it('should render successfully', () => {
-    const { baseElement } = render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    );
-    expect(baseElement).toBeTruthy();
-  });
-
-  it('should have a greeting as the title', () => {
-    const { getByText } = render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    );
-    expect(getByText(/Welcome dnd-ui/gi)).toBeTruthy();
-  });
+test('renders correctly', () => {
+  const { getByTestId } = render(<App />);
+  expect(getByTestId('heading')).toHaveTextContent('Welcome');
 });

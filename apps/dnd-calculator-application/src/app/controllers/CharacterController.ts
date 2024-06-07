@@ -2,7 +2,6 @@ import express, { Request, Response, Router, NextFunction } from 'express';
 import { deleteReqCharacter, getReqCharacterInfo, getReqCharacters, postReqCreateCharacter } from '../middleware/CharacterMiddleware';
 import { CharacterService } from '../services/CharacterService';
 import { Logger } from '../utils/Logger';
-import { v4 as uuidv4 } from 'uuid';
 import { CustomError } from '../utils/CustomError';
 
 class CharacterController {
@@ -141,7 +140,6 @@ class CharacterController {
 	
 		
 	}
-
 	public getRouter(): Router {
 		return this.router;
 	}
