@@ -21,7 +21,10 @@
     "skipDefaultLibCheck": true,
     "noImplicitAny": false,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "ui": ["ui/src/index.ts"],
+      "ui-components": ["libs/ui-components/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
