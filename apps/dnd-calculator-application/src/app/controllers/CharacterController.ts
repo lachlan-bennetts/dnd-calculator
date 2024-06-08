@@ -58,7 +58,8 @@ class CharacterController {
 			const {error, value} = getReqCharacterInfo(req.headers);
 			if (error) {
 				this.logger.error('Error', error);
-				return res.sendStatus(400);
+				const err = new CustomError(error.message, 400)
+				throw err
 			} else {
 				this.logger.info('Success', value);
 			}

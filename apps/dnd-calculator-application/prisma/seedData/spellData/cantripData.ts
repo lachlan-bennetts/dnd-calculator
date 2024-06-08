@@ -10,7 +10,7 @@ const acidSplash =
       range: 60,
       components: ['V', 'S'],
       targetNumber: 2,
-      targetProximity: 5,
+      multiTargetProximity: 5,
       classes: {
         connect: [
           {className: "Wizard"},

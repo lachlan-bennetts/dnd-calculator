@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { cantripSeed } from "./seedData/cantripData";
+import { cantripSeed } from "./seedData/spellData/cantripData";
 import { classSeedData } from "./seedData/classData";
 import { raceDataSeed } from "./seedData/raceData";
 import { backgroundsSeedData } from "./seedData/backgroundData";

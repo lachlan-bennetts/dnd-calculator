@@ -2,7 +2,6 @@ import { saveCharacterDto } from "../dtos/saveCharacterDtos";
 import { Logger } from "../utils/Logger"
 import { CharacterRepository } from "../repositories/CharacterRepository";
 import { mapCharacterSheetInfo, saveCharacterMapper } from "../mapper/CharacterMapper";
-import { ClassRepository } from "../repositories/ClassRepository";
 import { CharacterClassRepository } from "../repositories/CharacterClassRepository";
 import { mapNewCharacterClass } from "../mapper/CharacterClassMapper";
 import { UserRepository } from "../repositories/UserRepository";
@@ -48,7 +47,7 @@ export class CharacterService {
   async createNewCharacter(requestBody: saveCharacterDto) {
     try{
       // Check if user exists
-      const userExists = await this.userRepository.retrieveUserById(requestBody.userId)
+      const userExists = await this.userRepository.userExists(requestBody.userId)
       if(!userExists) {
         throw new CustomError("User does not exist", 404)
       }
@@ -121,7 +120,7 @@ export class CharacterService {
   async getCharacters(userId: string) {
     try {
       this.logger.info(`Check user exists with userId ${userId}`)
-      const userExists = await this.userRepository.retrieveUserById(userId)
+      const userExists = await this.userRepository.userExists(userId)
       if(!userExists) {
         throw new CustomError("User does not exist", 404)
       }

@@ -27,12 +27,16 @@ export class UserRepository {
     });
   }
 
-  async retrieveUserById(userId: string) {
-    return await this.prisma.user.findUnique({
+  async userExists(userId: string) {
+    const doesUserExist =  await this.prisma.user.findUnique({
       where: {
         userId: userId
       }
     });
+    if(!doesUserExist) {
+      return false;
+    }
+    return true
   }
 
   async retrieveUserByUsername(username: string) {

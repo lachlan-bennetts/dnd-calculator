@@ -3,7 +3,6 @@ import { ClassRepository } from "../repositories/ClassRepository";
 import { Logger } from "../utils/Logger";
 import { CustomError } from "../utils/CustomError";
 import { ClassFeatureService } from "./ClassFeatureService";
-import { ClassEnum } from "../utils/constants";
 
 export interface IClassFeature {
   classFeatureId: string,
@@ -12,8 +11,6 @@ export interface IClassFeature {
   className: string,
   subclass: string | null,
   featureLevel: number,
-  createdAt: Date,
-  updatedAt: Date
 }
 
 export class ClassService {
@@ -37,9 +34,7 @@ export class ClassService {
     const allClassFeatures: IClassFeature[][] = classesAndFeats.map((classObj) => {
       return classObj.classFeatures
     })
-    console.log("ALL CLASS FEATS", allClassFeatures)
     const activeClassFeatures = this.classFeatureService.mapActiveFeatures(characterClasses, allClassFeatures)
-    console.log("ACTIVE CLASS FEATS", activeClassFeatures)
 
     const mappedResults = classesAndFeats.map((classEnt) => {
       const mappedClass =  {
