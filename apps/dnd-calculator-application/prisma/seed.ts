@@ -3,7 +3,7 @@ import { cantripSeed } from "./seedData/spellData/cantripData";
 import { classSeedData } from "./seedData/classData";
 import { raceDataSeed } from "./seedData/raceData";
 import { backgroundsSeedData } from "./seedData/backgroundData";
-import { barbarianFeatures } from "./seedData/classFeatureData";
+import { classFeaturesSeed } from "./seedData/classFeatureData";
 
 const prisma = new PrismaClient();
 
@@ -53,7 +53,7 @@ async function main() {
 
  
   const seedClassFeatures = await prisma.classFeature.createMany({
-    data: barbarianFeatures
+    data: classFeaturesSeed
   })
   seedClassFeatures
   console.log(`Class features seeded successfully`)

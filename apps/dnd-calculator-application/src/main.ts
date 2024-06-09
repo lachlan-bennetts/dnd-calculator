@@ -1,6 +1,5 @@
 import express from 'express';
 import CalculatorController from './app/controllers/CalculatorController';
-import CharacterRoute from './app/controllers/CharacterController';
 import { AuthContoller } from './app/controllers/AuthController';
 import CharacterController from './app/controllers/CharacterController';
 import { CustomError } from './app/utils/CustomError';
