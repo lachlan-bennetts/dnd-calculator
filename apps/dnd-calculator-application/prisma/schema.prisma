@@ -56,12 +56,20 @@ model Race {
 
 model RaceFeature {
   raceFeatureId String @id @default(cuid())
-  name String
+  featureName String
   level Int
   description String
   race Race[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  raceAction RaceAction[]
+  subRace String
+}
+
+model RaceAction {
+  raceActionId String @id @default(cuid())
+  raceFeature RaceFeature @relation(fields: [raceFeatureId], references: [raceFeatureId])
+  raceFeatureId String
+  featureType String // Action, Reaction, Bonus Action, Passive, Level Up
+
 }
 
 model Class {
