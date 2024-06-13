@@ -41,13 +41,21 @@ CREATE TABLE "Race" (
 -- CreateTable
 CREATE TABLE "RaceFeature" (
     "raceFeatureId" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "level" INTEGER NOT NULL,
-    "description" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "featureName" TEXT NOT NULL,
+    "featureLevel" INTEGER NOT NULL,
+    "featureDescription" TEXT NOT NULL,
+    "subRace" TEXT NOT NULL,
 
     CONSTRAINT "RaceFeature_pkey" PRIMARY KEY ("raceFeatureId")
+);
+
+-- CreateTable
+CREATE TABLE "RaceAction" (
+    "raceActionId" TEXT NOT NULL,
+    "raceFeatureId" TEXT NOT NULL,
+    "featureType" TEXT NOT NULL,
+
+    CONSTRAINT "RaceAction_pkey" PRIMARY KEY ("raceActionId")
 );
 
 -- CreateTable
@@ -63,8 +71,7 @@ CREATE TABLE "Class" (
     "spellCastingAttribute" TEXT,
     "savingThrowProficiencies" TEXT[],
     "recommendedStandardArray" INTEGER[],
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "subClassStart" INTEGER NOT NULL DEFAULT 3,
 
     CONSTRAINT "Class_pkey" PRIMARY KEY ("className")
 );
@@ -77,8 +84,6 @@ CREATE TABLE "ClassFeature" (
     "subclass" TEXT,
     "featureLevel" INTEGER NOT NULL,
     "className" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "ClassFeature_pkey" PRIMARY KEY ("classFeatureId")
 );
@@ -227,24 +232,28 @@ CREATE TABLE "Spell" (
     "spellName" TEXT NOT NULL,
     "spellLevel" INTEGER NOT NULL,
     "school" TEXT NOT NULL,
-    "actionCastingTime" INTEGER NOT NULL DEFAULT 0,
+    "enhancement" TEXT NOT NULL DEFAULT '',
+    "actionCastingTime" INTEGER NOT NULL DEFAULT 1,
     "bonusActionCasting" BOOLEAN NOT NULL DEFAULT false,
     "selfCasting" BOOLEAN NOT NULL DEFAULT false,
     "touchCasting" BOOLEAN NOT NULL DEFAULT false,
     "range" INTEGER NOT NULL,
+    "areaOfEffectType" TEXT NOT NULL DEFAULT 'None',
     "areaOfEffect" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
     "components" TEXT[],
     "roundDuration" INTEGER NOT NULL DEFAULT 0,
     "spellDescription" TEXT NOT NULL,
     "concentration" BOOLEAN NOT NULL DEFAULT false,
-    "TargetNumber" INTEGER NOT NULL DEFAULT 1,
+    "ritual" BOOLEAN NOT NULL DEFAULT false,
+    "targetType" TEXT NOT NULL DEFAULT 'Any',
+    "targetNumber" INTEGER NOT NULL DEFAULT 1,
     "multiTargetProximity" INTEGER NOT NULL DEFAULT 0,
     "sightRequired" BOOLEAN NOT NULL DEFAULT false,
     "spellType" TEXT NOT NULL,
     "damageType" TEXT NOT NULL DEFAULT '',
     "dieType" INTEGER NOT NULL DEFAULT 0,
     "dieNumber" INTEGER NOT NULL DEFAULT 0,
-    "spellSave" TEXT NOT NULL DEFAULT '',
+    "spellSave" TEXT NOT NULL DEFAULT 'None',
     "attackType" TEXT NOT NULL DEFAULT '',
     "tags" TEXT[],
 
@@ -261,12 +270,6 @@ CREATE TABLE "User" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("userId")
-);
-
--- CreateTable
-CREATE TABLE "_RaceToRaceFeature" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -303,12 +306,6 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_RaceToRaceFeature_AB_unique" ON "_RaceToRaceFeature"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_RaceToRaceFeature_B_index" ON "_RaceToRaceFeature"("B");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_ClassSpells_AB_unique" ON "_ClassSpells"("A", "B");
 
 -- CreateIndex
@@ -319,6 +316,12 @@ CREATE UNIQUE INDEX "_MonsterToSpell_AB_unique" ON "_MonsterToSpell"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_MonsterToSpell_B_index" ON "_MonsterToSpell"("B");
+
+-- AddForeignKey
+ALTER TABLE "RaceFeature" ADD CONSTRAINT "RaceFeature_subRace_fkey" FOREIGN KEY ("subRace") REFERENCES "Race"("subRace") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "RaceAction" ADD CONSTRAINT "RaceAction_raceFeatureId_fkey" FOREIGN KEY ("raceFeatureId") REFERENCES "RaceFeature"("raceFeatureId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ClassFeature" ADD CONSTRAINT "ClassFeature_className_fkey" FOREIGN KEY ("className") REFERENCES "Class"("className") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -349,12 +352,6 @@ ALTER TABLE "HeldItem" ADD CONSTRAINT "HeldItem_characterId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "HeldItem" ADD CONSTRAINT "HeldItem_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("itemId") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_RaceToRaceFeature" ADD CONSTRAINT "_RaceToRaceFeature_A_fkey" FOREIGN KEY ("A") REFERENCES "Race"("subRace") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_RaceToRaceFeature" ADD CONSTRAINT "_RaceToRaceFeature_B_fkey" FOREIGN KEY ("B") REFERENCES "RaceFeature"("raceFeatureId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ClassSpells" ADD CONSTRAINT "_ClassSpells_A_fkey" FOREIGN KEY ("A") REFERENCES "Class"("className") ON DELETE CASCADE ON UPDATE CASCADE;

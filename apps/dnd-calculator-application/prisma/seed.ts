@@ -4,8 +4,11 @@ import { classSeedData } from "./seedData/classData";
 import { raceDataSeed } from "./seedData/raceData";
 import { backgroundsSeedData } from "./seedData/backgroundData";
 import { classFeaturesSeed } from "./seedData/classFeatureData";
+import { raceFeaturesData } from "./seedData/raceFeaturesData";
+import { Logger } from '../src/app/utils/logger';
 
 const prisma = new PrismaClient();
+const logger = new Logger()
 
 async function main() {
   // Remove with introduction of FE.
@@ -24,14 +27,14 @@ async function main() {
   })
 
   seededUser
-  console.log('Seeding user')
+  logger.info('Seeding user')
 
   const seedClasses = await prisma.class.createMany({
     data: classSeedData
   })
   seedClasses
 
-  console.log(`Classes seeded successfully`)
+  logger.info(`Classes seeded successfully`)
   
 
   const seedRaceData = raceDataSeed.forEach(async (race) => {
@@ -41,7 +44,7 @@ async function main() {
   })
   seedRaceData
 
-  console.log(`Races seeded successfully`)
+  logger.info(`Races seeded successfully`)
 
   
   const seedBackgroundData = await prisma.background.createMany({
@@ -49,14 +52,14 @@ async function main() {
   })
   seedBackgroundData
   
-  console.log(`Backgrounds seeded successfully`)
+  logger.info(`Backgrounds seeded successfully`)
 
  
   const seedClassFeatures = await prisma.classFeature.createMany({
     data: classFeaturesSeed
   })
   seedClassFeatures
-  console.log(`Class features seeded successfully`)
+  logger.info(`Class features seeded successfully`)
 
   const seedCantrips = cantripSeed.forEach(async (cantrip) => {
     const cantripSeed = await prisma.spell.create({
@@ -65,9 +68,14 @@ async function main() {
     return cantripSeed
   })
   seedCantrips
-  console.log(`Cantrips seeded successfully`)
+  logger.info(`Cantrips seeded successfully`)
 
-  console.log(`Seed complete`)
+  const seedRaceFeatures = prisma.raceFeature.createMany({
+    data: raceFeaturesData
+  })
+  logger.info(`Race features seeded successfully`)
+
+  logger.info(`Seed complete`)
 
 
 }

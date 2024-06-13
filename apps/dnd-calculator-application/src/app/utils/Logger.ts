@@ -24,7 +24,8 @@ export class Logger {
   }
 
   info(message: string, value?: any) {
-    this.logger.info(`[${this.correlationId}] ${message}, ${value}`);
+    if(value) return this.logger.info(`[${this.correlationId}] ${message}, ${value}`);
+    return this.logger.info(`[${this.correlationId}] ${message}`);
   }
 
   warn(message: string) {

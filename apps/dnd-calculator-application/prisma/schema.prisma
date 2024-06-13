@@ -57,11 +57,11 @@ model Race {
 model RaceFeature {
   raceFeatureId String @id @default(cuid())
   featureName String
-  level Int
-  description String
-  race Race[]
-  raceAction RaceAction[]
+  featureLevel Int
+  featureDescription String
+  race Race @relation(fields: [subRace], references: [subRace])
   subRace String
+  raceAction RaceAction[]
 }
 
 model RaceAction {
@@ -69,7 +69,7 @@ model RaceAction {
   raceFeature RaceFeature @relation(fields: [raceFeatureId], references: [raceFeatureId])
   raceFeatureId String
   featureType String // Action, Reaction, Bonus Action, Passive, Level Up
-
+  // To come out in phase II no need for RaceActions yet.
 }
 
 model Class {
