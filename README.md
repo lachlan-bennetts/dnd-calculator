@@ -43,3 +43,6 @@ Run `nx serve dnd-calculator` to start the development server. Happy coding!
 ## Build for production
 
 Run `nx build dnd-calculator` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
+
+
+<!-- Introduce a temporary effect table to introduce effects on the entity, time limit, damage per turn, Saves needed>

@@ -6,6 +6,7 @@ import { backgroundsSeedData } from "./seedData/backgroundData";
 import { classFeaturesSeed } from "./seedData/classFeatureData";
 import { raceFeaturesData } from "./seedData/raceFeaturesData";
 import { Logger } from '../src/app/utils/logger';
+import { firstLevelSpells } from "./seedData/spellData/1stLvlSpellData";
 
 const prisma = new PrismaClient();
 const logger = new Logger()
@@ -61,6 +62,7 @@ async function main() {
   seedClassFeatures
   logger.info(`Class features seeded successfully`)
 
+  logger.info(`Seeding cantrips`)
   const seedCantrips = cantripSeed.forEach(async (cantrip) => {
     const cantripSeed = await prisma.spell.create({
       data: cantrip
@@ -70,9 +72,20 @@ async function main() {
   seedCantrips
   logger.info(`Cantrips seeded successfully`)
 
+  logger.info(`Seeding 1st level spells`)
+  const seed1stLvlSpells = firstLevelSpells.forEach(async (spell) => { 
+    const spellSeed = await prisma.spell.create({
+      data: spell
+    })
+    return spellSeed
+  })
+  seed1stLvlSpells
+  logger.info(`1st level spells seeded successfully`)
+
   const seedRaceFeatures = prisma.raceFeature.createMany({
     data: raceFeaturesData
   })
+  seedRaceFeatures
   logger.info(`Race features seeded successfully`)
 
   logger.info(`Seed complete`)

@@ -9,8 +9,9 @@ const acidSplash =
       actionCastingTime: 1,
       range: 60,
       components: ['V', 'S'],
-      targetNumber: 2,
-      multiTargetProximity: 5,
+      targetNumber: 1,
+      areaOfEffectType: 'Sphere',
+      areaOfEffect: [5],
       classes: {
         connect: [
           {className: "Wizard"},
@@ -21,7 +22,6 @@ const acidSplash =
       damageType: 'ACID',
       dieType: 6,
       dieNumber: 1,
-      areaOfEffect: [5]
     }
 
 

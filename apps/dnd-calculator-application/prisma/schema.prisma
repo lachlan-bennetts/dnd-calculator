@@ -238,30 +238,31 @@ model Monster {
 model Spell {
   spellName String @unique @id
   spellLevel Int
+  spellDescription String
   school String
   enhancement String @default("")
   actionCastingTime Int @default(1)
   bonusActionCasting Boolean @default(false)
   selfCasting Boolean @default(false)
   touchCasting Boolean @default(false)
-  range Int
-  areaOfEffectType String @default("None")
+  range Int @default(0)
+  areaOfEffectType String @default("")
   areaOfEffect Int[] @default([])
   components String[]
   roundDuration Int @default(0)
-  spellDescription String
   concentration Boolean @default(false)
   ritual Boolean @default(false)
   targetType String @default("Any")
   targetNumber Int @default(1)
-  multiTargetProximity Int @default(0)
   sightRequired Boolean @default(false)
   spellType String
+  conditionType String @default("")
   damageType String @default("")
+  effectType String @default("")
   dieType Int @default(0)
   dieNumber Int @default(0)
-  spellSave String @default("None")
-  attackType String @default("")
+  spellSave String @default("")
+  saveRes String @default("")
   tags String[]
   monsters Monster[]
   classes Class[] @relation("ClassSpells")
