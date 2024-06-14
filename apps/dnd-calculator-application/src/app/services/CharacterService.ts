@@ -12,6 +12,7 @@ import { ICharacterRaceInfo, RaceService } from "./RaceService";
 import { ClassService } from "./ClassService";
 import { ICharacterBackground, mapCharacterBackgroundInfo } from "../mapper/BackgroundMapper";
 import { SpellService } from "./SpellService";
+import { IClassNameLevelSubclass } from "../utils/interfaces";
 
 export interface ICharacterAux {
   raceInfo: ICharacterRaceInfo,
@@ -216,5 +217,61 @@ export class CharacterService {
       this.logger.error(`An error has occurred in deleteCharacter  and error ${err}`)
       throw err
     }
+  }
+
+  async levelUpCharacterInfo(userId: string, characterId: string) {
+    // Check if user exists
+    await this.doesUserExist(userId)
+    // Check if character exists and user ownership.
+    const character = await this.retrieveCharacter(characterId, userId)
+    // Check if character is level 20
+    if (character.level >= 20) {
+      this.logger.error(`Character is already level 20`)
+      throw new CustomError("Character is already level 20", 400)
+    }
+    // Check if character has enough XP to level up, may come in later???
+    const characterClasses: IClassNameLevelSubclass[] = character.characterClasses.map((characterClass) => {
+      if (characterClass.subClass) {
+        return {
+          className: characterClass.className,
+          classLevel: characterClass.classLevel,
+          subclass: characterClass.subClass,
+        }
+      } else {
+        return {
+          className: characterClass.className,
+          classLevel: characterClass.classLevel,
+        }
+      }
+    })
+    const result = await this.classService.retrieveClassLevelUpInfo(characterClasses)
+
+    return 'YEAH'
+    
+  }
+
+  async retrieveCharacter(characterId: string, userId: string) {
+    this.logger.info(`Commencing doesCharacterExist within CharacterService `)
+    const character = await this.characterRepository.retrieveCharacterInfo(characterId, this.logger)
+    if (!character) {
+      this.logger.error(`Character does not exist with characterId ${characterId}`)
+      throw new CustomError("Character does not exist", 404)
+    }
+    if(character.userId !== userId) {
+      this.logger.error(`User does not own character with characterId ${characterId}`)
+      throw new CustomError("User does not own character", 403)
+    }
+    return character
+  }
+
+
+  async doesUserExist(userId: string) {
+    this.logger.info(`Commencing doesUserExist within CharacterService `)
+    const userExist = await this.userRepository.userExists(userId)
+    if (!userExist) {
+      this.logger.error(`User does not exist with userId ${userId}`)
+      throw new CustomError("User does not exist", 404)
+    }
+    return userExist
   }
 }

@@ -3,6 +3,8 @@ import { ClassRepository } from "../repositories/ClassRepository";
 import { Logger } from "../utils/Logger";
 import { CustomError } from "../utils/CustomError";
 import { ClassFeatureService } from "./ClassFeatureService";
+import { IClassName, IClassNameLevelSubclass } from "../utils/interfaces";
+import { mapClassLevelUpDetails } from "../mapper/ClassMapper";
 
 export interface IClassFeature {
   classFeatureId: string,
@@ -58,4 +60,20 @@ export class ClassService {
     }
     return retrievedClass
   }
+
+  async retrieveClassLevelUpInfo(characterClassInfo: IClassNameLevelSubclass[]){
+    // Retrieve level up info...
+    const allClasses = await this.classRepository.retrieveAllClasses(this.logger)
+    const allClassNames: IClassName[] = allClasses.map((classObj) => {
+      return {
+        className: classObj.className
+      }
+    })
+
+    const levelUpClassAndFeatures = mapClassLevelUpDetails(characterClassInfo, allClassNames, this.logger)
+     
+
+
+  }
+
 }

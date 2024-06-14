@@ -73,6 +73,18 @@ const postCharacterSchema = joi.object({
   userId: joi.string().required(),
 })
 
+const characterClassesSchema = joi.object({
+  class: joi.string().required(),
+  subClass: joi.string,
+  classLevel: joi.number().required(),
+})
+
+const getCharacterLevelUpSchema = joi.object({
+  "character-id": joi.string().required(),
+  "user-id": joi.string().required(),
+}).unknown(true)
+
+
 const getCharactersHeadersSchema = joi.object({
   "user-id": joi.string().required()
 }).unknown(true)
@@ -95,4 +107,5 @@ const addClassSchema = joi.object({
 export const postReqCreateCharacter = validator(postCharacterSchema)
 export const getReqCharacters = validator(getCharactersHeadersSchema)
 export const getReqCharacterInfo= validator(getCharacterInfoSchema)
+export const getReqLevelUpCharacter = validator(getCharacterLevelUpSchema)
 export const deleteReqCharacter = validator(deleteCharacterSchema)
