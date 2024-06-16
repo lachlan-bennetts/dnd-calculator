@@ -6,7 +6,7 @@ import { CharacterClassRepository } from "../repositories/CharacterClassReposito
 import { mapNewCharacterClass } from "../mapper/CharacterClassMapper";
 import { UserRepository } from "../repositories/UserRepository";
 import { CustomError } from "../utils/CustomError";
-import { AttributeEnum, ClassEnum, SpellcastingClasses, spellSlots } from "../utils/constants";
+import { AttributeEnum, ClassEnum, SpellcastingClasses, spellLevelSlots, spellSlots } from "../utils/constants";
 import { inspect } from "util";
 import { ICharacterRaceInfo, RaceService } from "./RaceService";
 import { ClassService } from "./ClassService";
@@ -24,6 +24,11 @@ export interface ICharacterAux {
 export interface IDelPayload {
   userId: string,
   characterId: string
+}
+
+interface ISpellCastingLevelDetail {
+  spellCastingLevel: number;
+  spellSlots: number[];
 }
 
 export class CharacterService {
@@ -107,14 +112,20 @@ export class CharacterService {
     return characterMapped
   }
 
-  getInitialSpellSlots(characterLevel: number, characterClass: ClassEnum): number[] {
+  getInitialSpellSlots(characterLevel: number, characterClass: ClassEnum): ISpellCastingLevelDetail {
     this.logger.info('Commencing getSpellSlots within CharacterService')
-    if (characterLevel == 1 && SpellcastingClasses.includes(characterClass)) {
+    if (characterLevel === 1 && SpellcastingClasses.includes(characterClass)) {
       this.logger.info('Character is level 1 and has spellcasting class')
-      return spellSlots[characterLevel]
+      return {
+        spellCastingLevel: 1,
+        spellSlots: spellLevelSlots[characterLevel]
+      }
     }
     this.logger.info(`Character is level 1 with no spellcasting class`)
-    return []
+    return {
+      spellCastingLevel: 0,
+      spellSlots: []
+    }
   }
 
   // Get list of characters you have, don't need heaps of info, just names classes and levels
@@ -192,15 +203,7 @@ export class CharacterService {
   async deleteCharacter(characterId: string, userId: string) {
     try {
       this.logger.info(`Commencing deleteCharacter within CharacterService `)
-      const characterEntity = await this.characterRepository.retrieveCharacterInfo(characterId, this.logger)
-      if(!characterEntity) {
-        this.logger.error(`Character does not exist with characterId ${characterId}`)
-        throw new CustomError("Character does not exist", 404)
-      }
-      if(characterEntity.userId !== userId) {
-        this.logger.error(`User does not own character with characterId ${characterId}`)
-        throw new CustomError("User does not own character", 403)
-      }
+      const characterEntity = await this.retrieveCharacter(characterId, userId)
 
       this.logger.info(`Deleting characterClass with characterId ${characterId}`)
       const characterClassIds = characterEntity.characterClasses.map((characterClass) => characterClass.characterClassId)
@@ -251,7 +254,7 @@ export class CharacterService {
   }
 
   async retrieveCharacter(characterId: string, userId: string) {
-    this.logger.info(`Commencing doesCharacterExist within CharacterService `)
+    this.logger.info(`Commencing doesCharacterExist within CharacterService`)
     const character = await this.characterRepository.retrieveCharacterInfo(characterId, this.logger)
     if (!character) {
       this.logger.error(`Character does not exist with characterId ${characterId}`)
@@ -266,7 +269,7 @@ export class CharacterService {
 
 
   async doesUserExist(userId: string) {
-    this.logger.info(`Commencing doesUserExist within CharacterService `)
+    this.logger.info(`doesUserExist with userId`, userId)
     const userExist = await this.userRepository.userExists(userId)
     if (!userExist) {
       this.logger.error(`User does not exist with userId ${userId}`)

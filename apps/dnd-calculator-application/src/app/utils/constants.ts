@@ -282,14 +282,6 @@ export enum SpellTypeEnum {
   TRANSMUTATION = "Transmutation"
 }
 
-export const spellSlots = {
-  1: [2],
-  2: [3],
-  3: [4, 2],
-  4: [4, 3],
-  5: [4, 3, 2],
-}
-
 export const SpellcastingClasses = [
   "Bard",
   "Cleric",
@@ -366,17 +358,26 @@ export enum EquipmentTypeEnum {
   CONSUMABLE = "Consumable"
 }
 
-export const sorcererSpellCapacity = [
-  2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-  12, 12, 13, 13, 14, 14, 15, 15, 15, 15
-]
+export const spellLevelSlots = {
+  1: [2],
+  2: [3],
+  3: [4, 2],
+  4: [4, 3],
+  5: [4, 3, 2],
+  6: [4, 3, 3],
+  7: [4, 3, 3, 1],
+  8: [4, 3, 3, 2],
+  9: [4, 3, 3, 3, 1],
+  10: [4, 3, 3, 3, 2],
+  11: [4, 3, 3, 3, 2, 1],
+  12: [4, 3, 3, 3, 2, 1],
+  13: [4, 3, 3, 3, 2, 1, 1],
+  14: [4, 3, 3, 3, 2, 1, 1],
+  15: [4, 3, 3, 3, 2, 1, 1, 1],
+  16: [4, 3, 3, 3, 2, 1, 1, 1],
+  17: [4, 3, 3, 3, 2, 1, 1, 1, 1],
+  18: [4, 3, 3, 3, 3, 1, 1, 1, 1],
+  19: [4, 3, 3, 3, 3, 2, 1, 1, 1],
+  20: [4, 3, 3, 3, 3, 2, 2, 1, 1],
+}
 
-export const warlockSpellCapacity = [
-  2, 3, 4, 5, 6, 7, 8, 9, 10, 10,
-  11, 11, 12, 12, 13, 13, 14, 14, 15, 15
-]
-
-export const bardSpellCapacity = [
-  4, 5, 6, 7, 8, 9, 10, 11, 12, 14,
-  15, 15, 16, 18, 19, 19, 20, 22, 22, 22
-]

@@ -79,6 +79,7 @@ model Class {
   armourProficiencies String[]
   availableToolProficencies String[] @default([])
   spells Spell[] @relation("ClassSpells")
+  spellCapacity Int[] @default([])
   classFeatures ClassFeature[]
   characterClasses CharacterClass[]
   availableSkillProficiencies String[]
@@ -87,6 +88,9 @@ model Class {
   spellCastingAttribute String?
   savingThrowProficiencies String[]
   recommendedStandardArray Int[]
+  // TODO: Add Subclass Table at later date.
+  subClassTitles String[]
+  subClasses String[]
   subClassStart Int @default(3)
 }
 
@@ -156,6 +160,8 @@ model Character {
   currentSpeed Int
   proficiencyBonus Int
   alignment String
+  spellCastingLevel Int @default(0)
+  spellSlots Int[] @default([])
   background Background @relation(fields: [backgroundName], references: [backgroundName])
   backgroundName String
   inventory HeldItem[]

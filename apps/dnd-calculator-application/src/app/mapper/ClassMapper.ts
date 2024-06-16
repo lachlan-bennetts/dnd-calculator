@@ -39,8 +39,8 @@ export const mapClassLevelUpDetails = (characterClassInfo: IClassNameLevelSubcla
       }
     }
   })
-  return classObject;
 }
+
 
 const mapClassNameAndNewLevel = (characterClassInfo: IClassNameLevelSubclass[], allClassNames: IClassName[], logger: Logger): IClassNameLevelSubclass[] => {
   try {
@@ -67,5 +67,8 @@ const mapClassNameAndNewLevel = (characterClassInfo: IClassNameLevelSubclass[], 
   }
 }
 
+// TODO: Implement these.
 // Filter spells by class level
-// Learn how many spells to put into new level... Can be done in service layer.
+// spellCasting Level
+// spellCapacity increase?
+// subClassStart

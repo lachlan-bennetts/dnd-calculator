@@ -6,8 +6,8 @@ export interface saveCharacterDto {
   maxHitPoints: number;
   speed: number;
   items: string[];
-  equippedArmour: string[]; // Implement later
-  equippedWeapons: string[]; // Implement later
+  equippedArmour: string[]; // TODO: Implement later
+  equippedWeapons: string[]; // TODO: Implement later
   class: ClassEnum;
   alignment: string;
   attributeArray: number[];

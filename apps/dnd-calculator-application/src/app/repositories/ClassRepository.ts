@@ -44,7 +44,8 @@ export class ClassRepository {
     const allClasses = await this.prisma.class.findMany(
       {
         include: {
-          classFeatures: true
+          classFeatures: true,
+          spells: true
         }
       }
     )

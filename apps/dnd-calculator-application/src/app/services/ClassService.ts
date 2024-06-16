@@ -3,7 +3,7 @@ import { ClassRepository } from "../repositories/ClassRepository";
 import { Logger } from "../utils/Logger";
 import { CustomError } from "../utils/CustomError";
 import { ClassFeatureService } from "./ClassFeatureService";
-import { IClassName, IClassNameLevelSubclass } from "../utils/interfaces";
+import { IClassModel, IClassName, IClassNameLevelSubclass } from "../utils/interfaces";
 import { mapClassLevelUpDetails } from "../mapper/ClassMapper";
 
 export interface IClassFeature {
@@ -61,16 +61,11 @@ export class ClassService {
     return retrievedClass
   }
 
-  async retrieveClassLevelUpInfo(characterClassInfo: IClassNameLevelSubclass[]){
+  async retrieveClassLevelUpInfo(characterClassInfo: IClassNameLevelSubclass[], spellCastingLevel: number){
     // Retrieve level up info...
-    const allClasses = await this.classRepository.retrieveAllClasses(this.logger)
-    const allClassNames: IClassName[] = allClasses.map((classObj) => {
-      return {
-        className: classObj.className
-      }
-    })
+    const allClasses: IClassModel[] = await this.classRepository.retrieveAllClasses(this.logger)
 
-    const levelUpClassAndFeatures = mapClassLevelUpDetails(characterClassInfo, allClassNames, this.logger)
+    const levelUpClassAndFeatures = mapClassLevelUpDetails(characterClassInfo, allClasses, this.logger)
      
 
 
