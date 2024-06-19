@@ -86,11 +86,16 @@ export class ClassService {
     const allClasses: IClassModel[] =
       await this.classRepository.retrieveAllClasses(this.logger);
 
-    const levelUpClassAndFeatures = mapClassLevelUpDetails(
+    const levelUpClassInfo = mapClassLevelUpDetails(
       characterClassInfo,
       allClasses,
       spellCastingLevel,
       this.logger
     );
+
+    // TODO: Will have to place effects on certain classFeatures,
+    // For example if a class feature allows for the spell darkness to be learned
+    // without impacting spell capacity, how does that look?
+    return levelUpClassInfo;
   }
 }

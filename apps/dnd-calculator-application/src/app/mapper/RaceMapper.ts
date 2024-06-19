@@ -1,8 +1,11 @@
-import { Race } from "@prisma/client"
-import { ICharacterRaceInfo } from "../services/RaceService"
+import { Race } from '@prisma/client';
+import { ICharacterRaceInfo } from '../services/RaceService';
+import { IRaceFeatureModel } from '../utils/interfaces';
 
-
-export const mapCharacterRaceInfo = (raceData: Race, activeRaceFeatures: any): ICharacterRaceInfo  => {
+export const mapCharacterRaceInfo = (
+  raceData: Race,
+  activeRaceFeatures: any
+): ICharacterRaceInfo => {
   const raceProperties = {
     raceName: raceData.parentRace,
     subRace: raceData.subRace,
@@ -11,8 +14,8 @@ export const mapCharacterRaceInfo = (raceData: Race, activeRaceFeatures: any): I
     walkingSpeed: raceData.walkingSpeed,
     flyingSpeed: raceData.flyingSpeed,
     size: raceData.size,
-    raceFeatures: activeRaceFeatures
-  }
+    raceFeatures: activeRaceFeatures,
+  };
   const raceProficiencies = {
     armour: raceData.armourProficiencies,
     weapon: raceData.weaponProficiencies,
@@ -21,10 +24,23 @@ export const mapCharacterRaceInfo = (raceData: Race, activeRaceFeatures: any): I
     damageResist: raceData.damageTypeResistance,
     damageAdvantage: raceData.damageTypeAdvantageThrows,
     condtionAdvantage: raceData.conditionAdvantageThrows,
-  }
+  };
   const raceInfo = {
     raceProperties,
-    raceProficiencies
-  }
-  return raceInfo
-}
+    raceProficiencies,
+  };
+  return raceInfo;
+};
+
+export const mapRaceLevelUp = (
+  raceData: Race,
+  raceFeatures: IRaceFeatureModel[]
+) => {
+  const raceInfo = {
+    parentRace: raceData.parentRace,
+    subRace: raceData.subRace,
+    maxHealthMod: raceData.MaxHealthModifier,
+    levelUpRaceFeatures: raceFeatures,
+  };
+  return raceInfo;
+};

@@ -335,12 +335,27 @@ export class CharacterService {
           };
         }
       });
-    const result = await this.classService.retrieveClassLevelUpInfo(
+    const classesInfo = await this.classService.retrieveClassLevelUpInfo(
       characterClasses,
       spellCastingLevel
     );
 
-    return 'YEAH';
+    const newCharacterLvl = character.level + 1;
+    const subraceName = character.subRace;
+    const raceInfo = await this.raceService.collectLevelUpRaceInfo(
+      subraceName,
+      newCharacterLvl
+    );
+
+    const characterInfo = {
+      characterName: character.characterName,
+      alignment: character.alignment,
+      background: character.background,
+      race: raceInfo,
+      races: classesInfo,
+    };
+
+    return characterInfo;
   }
 
   async retrieveCharacter(characterId: string, userId: string) {

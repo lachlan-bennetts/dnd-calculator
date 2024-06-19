@@ -8,7 +8,7 @@ export interface ISaveCharacterClass {
   classLevel: number;
   className: string;
   spellSaveDC: number;
-  spellCapacity: number; 
+  spellCapacity: number;
   proficientSkills: string[];
   subClass?: string;
   characterId: string;
@@ -49,7 +49,7 @@ export interface IClassModel {
   recommendedStandardArray: number[];
   subClassStart: number;
   subClassTitles: string[];
-  subClasses: string[]
+  subClasses: string[];
 }
 
 export interface IClassFeatureModel {
@@ -94,4 +94,12 @@ export interface Spell {
   monsters?: string[];
   classes?: IClassModel[];
   characterSpells?: string[];
+}
+
+export interface IRaceFeatureModel {
+  raceFeatureId: string;
+  featureName: string;
+  featureDescription: string;
+  featureLevel: number;
+  subRace: string;
 }
