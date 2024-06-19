@@ -39,8 +39,8 @@ export interface IClassModel {
   weaponProficiencies: string[];
   armourProficiencies: string[];
   availableToolProficencies: string[];
-  spells?: Spell[];
-  classFeatures?: IClassFeatureModel[];
+  spells: Spell[];
+  classFeatures: IClassFeatureModel[];
   availableSkillProficiencies: string[];
   startingEquipment: string[];
   primaryAttribute: string;
@@ -48,6 +48,8 @@ export interface IClassModel {
   savingThrowProficiencies: string[];
   recommendedStandardArray: number[];
   subClassStart: number;
+  subClassTitles: string[];
+  subClasses: string[]
 }
 
 export interface IClassFeatureModel {
