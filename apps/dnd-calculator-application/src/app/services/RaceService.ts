@@ -1,6 +1,7 @@
 import { mapCharacterRaceInfo, mapRaceLevelUp } from '../mapper/RaceMapper';
 import { RaceRepository } from '../repositories/RaceRepository';
 import { Logger } from '../utils/Logger';
+import { IRaceFeatureModel } from '../utils/interfaces';
 
 export interface ICharacterRaceInfo {
   raceProperties: {
@@ -21,6 +22,13 @@ export interface ICharacterRaceInfo {
     damageAdvantage: string[];
     condtionAdvantage: string[];
   };
+}
+
+export interface IRaceLevelUpRes {
+  parentRace: string;
+  subRace: string;
+  maxHealthMod: number;
+  levelUpRaceFeatures: IRaceFeatureModel[];
 }
 
 export class RaceService {
@@ -69,7 +77,10 @@ export class RaceService {
     }
   }
 
-  async collectLevelUpRaceInfo(subraceName: string, NewCharacterLvl: number) {
+  async collectLevelUpRaceInfo(
+    subraceName: string,
+    NewCharacterLvl: number
+  ): Promise<IRaceLevelUpRes> {
     try {
       this.logger.info(
         `Collecting relevant race information for character level up to level ${NewCharacterLvl}`

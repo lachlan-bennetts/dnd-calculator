@@ -1,6 +1,7 @@
 import express, { Request, Response, Router, NextFunction } from 'express';
 import {
   deleteReqCharacter,
+  getInitialLevelUp,
   getReqCharacterInfo,
   getReqCharacters,
   postReqCreateCharacter,
@@ -32,6 +33,33 @@ class CharacterController {
     this.router.delete('/characters/character', this.deleteCharacter);
     // Add more routes as needed
   }
+
+  private handleGetCharacterCreation = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { error, value } = getInitialLevelUp(req.headers);
+      if (error) {
+        this.logger.error('Error', error);
+        const err = new CustomError(error.message, 400);
+        throw err;
+      }
+
+      const userId = req.headers['user-id'];
+
+      const result = await this.characterService.getInitialLevelUpInfo(userId);
+      res.status(200).json(result);
+    } catch (err: any) {
+      this.logger.error(
+        `Error has occurred at handleGetCharacterCreation  and error ${err}`
+      );
+      if (err instanceof CustomError) next(err);
+      const error = new CustomError(err.message, 500);
+      next(error);
+    }
+  };
 
   private handleGetCharacters = async (
     req: Request,

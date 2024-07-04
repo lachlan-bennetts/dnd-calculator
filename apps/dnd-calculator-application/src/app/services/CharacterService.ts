@@ -6,7 +6,10 @@ import {
   saveCharacterMapper,
 } from '../mapper/CharacterMapper';
 import { CharacterClassRepository } from '../repositories/CharacterClassRepository';
-import { mapNewCharacterClass } from '../mapper/CharacterClassMapper';
+import {
+  mapClassNameAndLevel,
+  mapNewCharacterClass,
+} from '../mapper/CharacterClassMapper';
 import { UserRepository } from '../repositories/UserRepository';
 import { CustomError } from '../utils/CustomError';
 import {
@@ -24,6 +27,7 @@ import {
 } from '../mapper/BackgroundMapper';
 import { SpellService } from './SpellService';
 import { IClassNameLevelSubclass } from '../utils/interfaces';
+import { Character } from '@prisma/client';
 
 export interface ICharacterAux {
   raceInfo: ICharacterRaceInfo;
@@ -147,6 +151,7 @@ export class CharacterService {
   }
 
   // TODO: Use this for updating spellSlots evnetually as well.
+  // Move to SpellsService
   getInitialSpellSlots(characterClass: ClassEnum): ISpellCastingLevelDetail {
     this.logger.info('Commencing getSpellSlots within CharacterService');
     if (SpellcastingClasses.includes(characterClass)) {
@@ -214,15 +219,13 @@ export class CharacterService {
           characterId,
           this.logger
         );
-      if (!characterData || characterData === null) {
+
+      if (!characterData) {
         this.logger.error(
           `Character does not exist with characterId ${characterId}`
         );
         throw new CustomError('Character does not exist', 404);
       }
-      this.logger.info(
-        `characterData retrieved successfully , ${inspect(characterData)}`
-      );
 
       // Need to display class Spells and Abilities. Spells can be easily done through active Spells table
       const characterClassIds = characterData.characterClasses.map(
@@ -319,24 +322,12 @@ export class CharacterService {
 
     const spellCastingLevel = character.spellCastingLevel;
 
-    // Check if character has enough XP to level up, may come in later???
-    const characterClasses: IClassNameLevelSubclass[] =
-      character.characterClasses.map((characterClass) => {
-        if (characterClass.subClass) {
-          return {
-            className: characterClass.className,
-            classLevel: characterClass.classLevel,
-            subclass: characterClass.subClass,
-          };
-        } else {
-          return {
-            className: characterClass.className,
-            classLevel: characterClass.classLevel,
-          };
-        }
-      });
+    // TODO: Check if character has enough XP to level up, may come in later???
+    const classNamesAndLevels = mapClassNameAndLevel(
+      character.characterClasses
+    );
     const classesInfo = await this.classService.retrieveClassLevelUpInfo(
-      characterClasses,
+      classNamesAndLevels,
       spellCastingLevel
     );
 
@@ -349,34 +340,41 @@ export class CharacterService {
 
     const characterInfo = {
       characterName: character.characterName,
+      newCharacterLvl: newCharacterLvl,
       alignment: character.alignment,
-      background: character.background,
+      background: character.backgroundName,
       race: raceInfo,
-      races: classesInfo,
+      classes: classesInfo,
     };
 
     return characterInfo;
   }
 
   async retrieveCharacter(characterId: string, userId: string) {
-    this.logger.info(`Commencing doesCharacterExist within CharacterService`);
-    const character = await this.characterRepository.retrieveCharacterInfo(
-      characterId,
-      this.logger
-    );
-    if (!character) {
-      this.logger.error(
-        `Character does not exist with characterId ${characterId}`
+    try {
+      this.logger.info(`Commencing doesCharacterExist within CharacterService`);
+      const character = await this.characterRepository.retrieveCharacterInfo(
+        characterId,
+        this.logger
       );
-      throw new CustomError('Character does not exist', 404);
+      // TODO: Fix this
+      if (!character) {
+        throw new CustomError(
+          `Character does not exist with characterId ${characterId}`,
+          404
+        );
+      }
+      if (character.userId !== userId) {
+        throw new CustomError(
+          `User does not own character with characterId ${characterId}`,
+          403
+        );
+      }
+      return character;
+    } catch (err) {
+      this.logger.error('Error within retrieveCharacter method:', err);
+      throw err;
     }
-    if (character.userId !== userId) {
-      this.logger.error(
-        `User does not own character with characterId ${characterId}`
-      );
-      throw new CustomError('User does not own character', 403);
-    }
-    return character;
   }
 
   async doesUserExist(userId: string) {

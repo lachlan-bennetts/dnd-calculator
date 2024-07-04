@@ -1,4 +1,4 @@
-import joi from 'joi'
+import joi from 'joi';
 import { validator } from './validator';
 
 const validRaceNames = [
@@ -10,8 +10,8 @@ const validRaceNames = [
   'Gnome',
   'Half-Elf',
   'Half-Orc',
-  'Tiefling'
-]
+  'Tiefling',
+];
 
 const validClassNames = [
   'Barbarian',
@@ -25,8 +25,8 @@ const validClassNames = [
   'Rogue',
   'Sorcerer',
   'Warlock',
-  'Wizard'
-]
+  'Wizard',
+];
 
 const backgroundNames = [
   'Acolyte',
@@ -41,8 +41,8 @@ const backgroundNames = [
   'Sage',
   'Sailor',
   'Soldier',
-  'Urchin'
-]
+  'Urchin',
+];
 
 const alignmentNames = [
   'Lawful Good',
@@ -53,8 +53,8 @@ const alignmentNames = [
   'Chaotic Neutral',
   'Lawful Evil',
   'Neutral Evil',
-  'Chaotic Evil'
-]
+  'Chaotic Evil',
+];
 
 const postCharacterSchema = joi.object({
   playerName: joi.string().required().max(20).min(3),
@@ -66,46 +66,72 @@ const postCharacterSchema = joi.object({
   items: joi.array().items(joi.string()),
   attributeArray: joi.array().items(joi.number().required()).length(6),
   skillsArray: joi.array().items(joi.number().required()).length(18),
-  background: joi.string().required().valid(...backgroundNames),
-  alignment: joi.string().required().valid(...alignmentNames),
-  class: joi.string().required().valid(...validClassNames),
-  race: joi.string().required().valid(...validRaceNames),
+  background: joi
+    .string()
+    .required()
+    .valid(...backgroundNames),
+  alignment: joi
+    .string()
+    .required()
+    .valid(...alignmentNames),
+  class: joi
+    .string()
+    .required()
+    .valid(...validClassNames),
+  race: joi
+    .string()
+    .required()
+    .valid(...validRaceNames),
   userId: joi.string().required(),
-})
+});
 
 const characterClassesSchema = joi.object({
   class: joi.string().required(),
   subClass: joi.string,
   classLevel: joi.number().required(),
-})
+});
 
-const getCharacterLevelUpSchema = joi.object({
-  "character-id": joi.string().required(),
-  "user-id": joi.string().required(),
-}).unknown(true)
+const getCharacterLevelUpSchema = joi
+  .object({
+    'character-id': joi.string().required(),
+    'user-id': joi.string().required(),
+  })
+  .unknown(true);
 
+const getCharactersHeadersSchema = joi
+  .object({
+    'user-id': joi.string().required(),
+  })
+  .unknown(true);
 
-const getCharactersHeadersSchema = joi.object({
-  "user-id": joi.string().required()
-}).unknown(true)
+const getInitalLevelUpSchema = joi
+  .object({
+    'user-id': joi.string().required(),
+  })
+  .unknown(true);
 
-const getCharacterInfoSchema = joi.object({
-  "character-id": joi.string().required()
-}).unknown(true)
+const getCharacterInfoSchema = joi
+  .object({
+    'character-id': joi.string().required(),
+  })
+  .unknown(true);
 
-const deleteCharacterSchema = joi.object({
-  "character-id": joi.string().required(),
-  "user-id": joi.string().required()
-}).unknown(true)
+const deleteCharacterSchema = joi
+  .object({
+    'character-id': joi.string().required(),
+    'user-id': joi.string().required(),
+  })
+  .unknown(true);
 
 const addClassSchema = joi.object({
   class: joi.string().required(),
   subClass: joi.string(),
   classLevel: joi.number().required(),
-})
+});
 
-export const postReqCreateCharacter = validator(postCharacterSchema)
-export const getReqCharacters = validator(getCharactersHeadersSchema)
-export const getReqCharacterInfo= validator(getCharacterInfoSchema)
-export const getReqLevelUpCharacter = validator(getCharacterLevelUpSchema)
-export const deleteReqCharacter = validator(deleteCharacterSchema)
+export const postReqCreateCharacter = validator(postCharacterSchema);
+export const getReqCharacters = validator(getCharactersHeadersSchema);
+export const getReqCharacterInfo = validator(getCharacterInfoSchema);
+export const getReqLevelUpCharacter = validator(getCharacterLevelUpSchema);
+export const deleteReqCharacter = validator(deleteCharacterSchema);
+export const getInitialLevelUp = validator(getInitalLevelUpSchema);

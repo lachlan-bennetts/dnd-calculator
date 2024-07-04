@@ -10,7 +10,7 @@ generator client {
 
 generator erd {
   provider = "prisma-erd-generator"
-  output = "./schema.svg"
+  output   = "./schema.svg"
 }
 
 datasource db {
@@ -18,269 +18,265 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Campaign {
-  id String @id @default(cuid())
-  campaignName String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Race {
-  subRace String @unique @id
-  parentRace String
-  briefDescription String
-  creatureType String
-  darkVision Int
-  statPoolModifier Int[]
-  statPoolIncrease Int @default(0)
-  damageTypeResistance String[]
-  damageTypeAdvantageThrows String[]
-  conditionAdvantageThrows String[]
-  MaxHealthModifier Int @default(0)
-  cantripSlotModifier Int @default(0)
-  languageSlotModifier Int @default(0)
-  walkingSpeed Int
-  flyingSpeed Int @default(0)
-  swimmingSpeed Int @default(0)
-  climbingSpeed Int @default(0)
-  size String @default("Medium")
-  effects String[]
-  weaponProficiencies String[] @default([])
-  armourProficiencies String[] @default([])
-  toolProficiencies String[] @default([])
-  skillProficiencies String[] @default([])
-  features RaceFeature[]
-  languages String[]
-  character Character[]
-}
-
-model RaceFeature {
-  raceFeatureId String @id @default(cuid())
-  featureName String
-  featureLevel Int
-  featureDescription String
-  race Race @relation(fields: [subRace], references: [subRace])
-  subRace String
-  raceAction RaceAction[]
-}
-
-model RaceAction {
-  raceActionId String @id @default(cuid())
-  raceFeature RaceFeature @relation(fields: [raceFeatureId], references: [raceFeatureId])
-  raceFeatureId String
-  featureType String // Action, Reaction, Bonus Action, Passive, Level Up
-  // To come out in phase II no need for RaceActions yet.
-}
-
-model Class {
-  className String @unique @id
-  hitDie Int
-  weaponProficiencies String[]
-  armourProficiencies String[]
-  availableToolProficencies String[] @default([])
-  spells Spell[] @relation("ClassSpells")
-  spellCapacity Int[] @default([])
-  classFeatures ClassFeature[]
-  characterClasses CharacterClass[]
-  availableSkillProficiencies String[]
-  startingEquipment String[]
-  primaryAttribute String
-  spellCastingAttribute String?
-  savingThrowProficiencies String[]
-  recommendedStandardArray Int[]
-  subClassTitles String[]
-  subClasses String[]
-  subClassStart Int @default(3)
-}
-
-model ClassFeature {
-  classFeatureId String @id @default(cuid())
-  featureName String
-  featureDescription String
-  subclass String?
-  featureLevel Int
-  Class Class @relation(fields: [className], references: [className])
-  className String
-}
-
-model CharacterClass {
-  characterClassId String @id @default(cuid())
-  character Character @relation(fields: [characterId], references: [characterId])
-  characterId String
-  class Class @relation(fields: [className], references: [className])
-  className String
-  spellSaveDC Int
-  spellCapacity Int
-  characterSpells CharacterSpell[]
-  ProficientSkills String[]
-  subClass String?
-  classLevel Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model CharacterSpell {
-  id String @id @default(cuid())
-  characterClass CharacterClass @relation(fields: [characterClassId], references: [characterClassId])
-  characterClassId String
-  spell Spell @relation(fields: [spellName], references: [spellName])
-  spellName String
-  active Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-
 model Background {
-  backgroundName String @unique @id
-  backgroundDescription String
-  skillProficiencies String[]
-  toolProficiencies String[]
-  toolTypeProficiencies String[] @default([])
-  languageSlotModifier Int @default(0)
-  equipment String[]
-  backgroundFeatureTitle String
+  backgroundName               String      @id @unique
+  backgroundDescription        String
+  skillProficiencies           String[]
+  toolProficiencies            String[]
+  toolTypeProficiencies        String[]    @default([])
+  languageSlotModifier         Int         @default(0)
+  equipment                    String[]
+  backgroundFeatureTitle       String
   backgroundFeatureDescription String
-  suggestedCharacteristics String[]
-  Character Character[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  suggestedCharacteristics     String[]
+  Character                    Character[]
+}
+
+model Campaign {
+  id           String   @id @default(cuid())
+  campaignName String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Character {
-  characterId String @id @default(cuid())
-  playerName String
-  characterName String
-  level Int
-  armourClass Int
-  currentHitPoints Int
-  maxHitPoints Int
-  tempHitPoints Int @default(0)
-  currentSpeed Int
-  proficiencyBonus Int
-  alignment String
-  spellCastingLevel Int @default(0)
-  spellSlots Int[] @default([])
-  background Background @relation(fields: [backgroundName], references: [backgroundName])
-  backgroundName String
-  inventory HeldItem[]
-  race Race @relation(fields: [subRace], references: [subRace])
-  subRace String 
-  user User @relation(fields: [userId], references: [userId])
-  userId String
-  characterClasses CharacterClass[]
-  attributeArray Int[]
-  skillArray Int[]
-} 
+  characterId       String           @id @default(cuid())
+  playerName        String
+  characterName     String
+  level             Int
+  armourClass       Int
+  currentHitPoints  Int
+  maxHitPoints      Int
+  tempHitPoints     Int              @default(0)
+  currentSpeed      Int
+  proficiencyBonus  Int
+  alignment         String
+  spellCastingLevel Int              @default(0)
+  spellSlots        Int[]            @default([])
+  background        Background       @relation(fields: [backgroundName], references: [backgroundName])
+  backgroundName    String
+  inventory         HeldItem[]
+  race              Race             @relation(fields: [subRace], references: [subRace])
+  subRace           String
+  user              User             @relation(fields: [userId], references: [userId])
+  userId            String
+  characterClasses  CharacterClass[]
+  attributeArray    Int[]
+  skillArray        Int[]
+}
 
+model CharacterClass {
+  characterClassId String           @id @default(cuid())
+  character        Character        @relation(fields: [characterId], references: [characterId])
+  characterId      String
+  class            Class            @relation(fields: [className], references: [className])
+  className        String
+  spellSaveDC      Int
+  spellCapacity    Int
+  characterSpells  CharacterSpell[]
+  ProficientSkills String[]
+  subClass         String?
+  classLevel       Int
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
 
-model Item {
-  itemId String @id @default(cuid())
-  name String @unique
-  version String
-  description String
-  rarity String
-  itemType String
-  consumableType String?
-  toolType String?
-  armourType String?
-  weaponType String?
-  attributeModifier Int[]
-  skillModifier Int[]
-  hasCharges Boolean
-  charges Int
-  requiresAttunement Boolean
-  damageType String
-  damageDieType Int
-  damageDieNumber Int
-  damageBonus Int
-  heldItem HeldItem[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model CharacterSpell {
+  id               String         @id @default(cuid())
+  characterClass   CharacterClass @relation(fields: [characterClassId], references: [characterClassId])
+  characterClassId String
+  spell            Spell          @relation(fields: [spellName], references: [spellName])
+  spellName        String
+  active           Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Class {
+  className                   String           @id @unique
+  hitDie                      Int
+  weaponProficiencies         String[]
+  armourProficiencies         String[]
+  availableToolProficencies   String[]         @default([])
+  spells                      Spell[]          @relation("ClassSpells")
+  spellCapacity               Int[]            @default([])
+  classFeatures               ClassFeature[]
+  characterClasses            CharacterClass[]
+  availableSkillProficiencies String[]
+  startingEquipment           String[]
+  primaryAttribute            String
+  spellCastingAttribute       String?
+  savingThrowProficiencies    String[]
+  recommendedStandardArray    Int[]
+  subClassTitles              String[]
+  subClasses                  String[]
+  subClassStart               Int              @default(3)
+}
+
+model ClassFeature {
+  classFeatureId     String  @id @default(cuid())
+  featureName        String
+  featureDescription String
+  subclass           String?
+  featureLevel       Int
+  Class              Class   @relation(fields: [className], references: [className])
+  className          String
 }
 
 model HeldItem {
-  heldItemId String @id @default(cuid())
-  character Character @relation(fields: [characterId], references: [characterId])
-  characterId String
-  item Item @relation(fields: [itemId], references: [itemId])
-  quantity Int
-  isEquipped Boolean @default(false)
+  heldItemId    String    @id @default(cuid())
+  character     Character @relation(fields: [characterId], references: [characterId])
+  characterId   String
+  item          Item      @relation(fields: [itemId], references: [itemId])
+  quantity      Int
+  isEquipped    Boolean   @default(false)
   equipmentType String[]
-  itemId String
+  itemId        String
+}
+
+model Item {
+  itemId             String     @id @default(cuid())
+  name               String     @unique
+  version            String
+  description        String
+  rarity             String
+  itemType           String
+  consumableType     String?
+  toolType           String?
+  armourType         String?
+  weaponType         String?
+  attributeModifier  Int[]
+  skillModifier      Int[]
+  hasCharges         Boolean
+  charges            Int
+  requiresAttunement Boolean
+  offHandEquip       Boolean    @default(false)
+  damageType         String
+  damageDieType      Int
+  damageDieNumber    Int
+  damageBonus        Int
+  heldItem           HeldItem[]
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+}
+
+model Race {
+  subRace                   String        @id @unique
+  parentRace                String
+  briefDescription          String
+  creatureType              String
+  darkVision                Int
+  statPoolModifier          Int[]
+  statPoolIncrease          Int           @default(0)
+  damageTypeResistance      String[]
+  damageTypeAdvantageThrows String[]
+  conditionAdvantageThrows  String[]
+  MaxHealthModifier         Int           @default(0)
+  cantripSlotModifier       Int           @default(0)
+  languageSlotModifier      Int           @default(0)
+  walkingSpeed              Int
+  flyingSpeed               Int           @default(0)
+  swimmingSpeed             Int           @default(0)
+  climbingSpeed             Int           @default(0)
+  size                      String        @default("Medium")
+  effects                   String[]
+  weaponProficiencies       String[]      @default([])
+  armourProficiencies       String[]      @default([])
+  toolProficiencies         String[]      @default([])
+  skillProficiencies        String[]      @default([])
+  features                  RaceFeature[]
+  languages                 String[]
+  character                 Character[]
+}
+
+model RaceFeature {
+  raceFeatureId      String       @id @default(cuid())
+  featureName        String
+  featureLevel       Int
+  featureDescription String
+  race               Race         @relation(fields: [subRace], references: [subRace])
+  subRace            String
+  raceAction         RaceAction[]
+}
+
+model RaceAction {
+  raceActionId  String      @id @default(cuid())
+  raceFeature   RaceFeature @relation(fields: [raceFeatureId], references: [raceFeatureId])
+  raceFeatureId String
+  featureType   String // Action, Reaction, Bonus Action, Passive, Level Up
+  // To come out in phase II no need for RaceActions yet.
 }
 
 model Monster {
-  monsterId String @id @default(cuid())
-  name String
-  size String
-  alignment String
-  armourClass Int
-  hitPoints Int
-  hitDieType Int
-  HitDieNumber Int
-  creatureType String
-  speed Int
-  spells Spell[]
-  attributes String[]
-  savingThrows Int[]
-  skills Int[]
-  features String[]
-  damageResistances String[]
-  damageImmunities String[]
+  monsterId           String   @id @default(cuid())
+  name                String
+  size                String
+  alignment           String
+  armourClass         Int
+  hitPoints           Int
+  hitDieType          Int
+  HitDieNumber        Int
+  creatureType        String
+  speed               Int
+  spells              Spell[]
+  attributes          String[]
+  savingThrows        Int[]
+  skills              Int[]
+  features            String[]
+  damageResistances   String[]
+  damageImmunities    String[]
   conditionImmunities String[]
-  passivePerception Int
-  senses String[]
-  languages String[]
-  challengeRating Int
-  specialAbilities String
-  actions String
-  legendaryActions String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  passivePerception   Int
+  senses              String[]
+  languages           String[]
+  challengeRating     Int
+  specialAbilities    String
+  actions             String
+  legendaryActions    String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Spell {
-  spellName String @unique @id
-  spellLevel Int
-  spellDescription String
-  school String
-  enhancement String @default("")
-  actionCastingTime Int @default(1)
-  bonusActionCasting Boolean @default(false)
-  selfCasting Boolean @default(false)
-  touchCasting Boolean @default(false)
-  range Int @default(0)
-  areaOfEffectType String @default("")
-  areaOfEffect Int[] @default([])
-  components String[]
-  roundDuration Int @default(0)
-  concentration Boolean @default(false)
-  ritual Boolean @default(false)
-  targetType String @default("Any")
-  targetNumber Int @default(1)
-  sightRequired Boolean @default(false)
-  spellType String
-  conditionType String @default("")
-  damageType String @default("")
-  effectType String @default("")
-  dieType Int @default(0)
-  dieNumber Int @default(0)
-  spellSave String @default("")
-  saveRes String @default("")
-  tags String[]
-  monsters Monster[]
-  classes Class[] @relation("ClassSpells")
-  characterSpells CharacterSpell[]
+  spellName          String           @id @unique
+  spellLevel         Int
+  spellDescription   String
+  school             String
+  enhancement        String           @default("")
+  actionCastingTime  Int              @default(1)
+  bonusActionCasting Boolean          @default(false)
+  selfCasting        Boolean          @default(false)
+  touchCasting       Boolean          @default(false)
+  range              Int              @default(0)
+  areaOfEffectType   String           @default("")
+  areaOfEffect       Int[]            @default([])
+  components         String[]
+  roundDuration      Int              @default(0)
+  concentration      Boolean          @default(false)
+  ritual             Boolean          @default(false)
+  targetType         String           @default("Any")
+  targetNumber       Int              @default(1)
+  sightRequired      Boolean          @default(false)
+  spellType          String
+  conditionType      String           @default("")
+  damageType         String           @default("")
+  effectType         String           @default("")
+  dieType            Int              @default(0)
+  dieNumber          Int              @default(0)
+  spellSave          String           @default("")
+  saveRes            String           @default("")
+  tags               String[]
+  monsters           Monster[]
+  classes            Class[]          @relation("ClassSpells")
+  characterSpells    CharacterSpell[]
 }
 
-
 model User {
-  userId String @id @default(cuid())
-  email String @unique
-  username String @unique
-  password String
-  characters Character[] 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  userId     String      @id @default(cuid())
+  email      String      @unique
+  username   String      @unique
+  password   String
+  characters Character[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }

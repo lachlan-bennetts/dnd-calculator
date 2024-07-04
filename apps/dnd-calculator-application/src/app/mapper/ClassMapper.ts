@@ -4,12 +4,14 @@ import {
   IClassName,
   IClassNameLevelSubclass,
   IClassFeatureModel,
+  ISpellModel,
 } from '../utils/interfaces';
 import { Logger } from '../utils/Logger';
 import { CustomError } from '../utils/CustomError';
-import { spellLevelSlots } from '../utils/constants';
+import { SpellcastingClasses, spellLevelSlots } from '../utils/constants';
+import { calcNewSpellSlots } from '../utils/helpers';
 
-interface IClassLevelUpDetails {
+export interface IClassLevelUpDetails {
   className: string;
   classLevel: number;
   hitDie: number;
@@ -32,7 +34,7 @@ export const mapClassLevelUpDetails = (
   allClasses: IClassModel[],
   spellCastingLevel: number,
   logger: Logger
-):IClassLevelUpDetails[] => {
+): IClassLevelUpDetails[] => {
   const allClassNames: IClassName[] = allClasses.map((currentClass) => {
     return {
       className: currentClass.className,
@@ -129,26 +131,18 @@ const mapClassNameAndNewLevel = (
 
 // TODO: Where to put this? Change name too.
 const filterLevelUpSpells = (
-  spells: Spell[],
+  spells: ISpellModel[] | undefined,
   spellCastingLevel: number
 ): ISpellsLevelUp => {
   // Filter out non spellcasting classes.
-  if (spells.length === 0)
+  if (!spells || spells.length === 0)
     return {
       newSpellSlots: [],
       availableSpells: [],
       newSpellCastingLevel: spellCastingLevel,
     };
 
-  const newSpellCastingLevel = spellCastingLevel + 1;
-  const oldSpellSlots = spellLevelSlots[spellCastingLevel];
-  const newSpellSlots = spellLevelSlots[newSpellCastingLevel];
-
-  newSpellSlots.map((spellOffset, i = 0) => {
-    if (!oldSpellSlots[i]) return spellOffset;
-
-    return spellOffset - oldSpellSlots[i];
-  });
+  const newSpellSlots = calcNewSpellSlots(spellCastingLevel);
 
   const maxSpellLevel = newSpellSlots + 1;
   const filteredSpells = spells.filter((spell) => {
@@ -160,4 +154,48 @@ const filterLevelUpSpells = (
     availableSpells: filteredSpells,
     newSpellCastingLevel: spellCastingLevel,
   };
+};
+
+export const mapInitialClassLevelUpInfo = (classes: IClassModel[]) => {
+  const mappedClasses = classes.map((classObj: IClassModel) => {
+    const filteredFeatures = classObj.classFeatures.filter(
+      (feature) => feature.featureLevel === 1
+    );
+    const filteredSpells = classObj.spells.filter(
+      (spell) => spell.spellLevel === 0 || spell.spellLevel === 1
+    );
+    if (SpellcastingClasses.includes(classObj.className)) {
+      const newSpellSlots = calcNewSpellSlots(0, classObj.className);
+      const mappedClassInfo = {
+        className: classObj.className,
+        hitDie: classObj.hitDie,
+        armourProficiencies: classObj.armourProficiencies,
+        weaponProficiencies: classObj.weaponProficiencies,
+        primaryAttribute: classObj.primaryAttribute,
+        classFeatures: filteredFeatures,
+        spellInfo: {
+          newSpellSlots: newSpellSlots,
+          availableSpells: filteredSpells,
+          newSpellCastingLevel: 1,
+        },
+      };
+      return mappedClassInfo;
+    } else {
+      const mappedClassInfo = {
+        className: classObj.className,
+        hitDie: classObj.hitDie,
+        armourProficiencies: classObj.armourProficiencies,
+        weaponProficiencies: classObj.weaponProficiencies,
+        primaryAttribute: classObj.primaryAttribute,
+        classFeatures: filteredFeatures,
+        spellInfo: {
+          newSpellSlots: [],
+          availableSpells: [],
+          newSpellCastingLevel: 0,
+        },
+      };
+      return mappedClassInfo;
+    }
+  });
+  return mappedClasses;
 };

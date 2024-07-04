@@ -1,15 +1,29 @@
-import { IAttributeObject, ISaveCharacterClass } from "../utils/interfaces";
-import { convertAttrToBonusObject } from "./AttributeMapper";
-import { saveCharacterDto } from "../dtos/saveCharacterDtos";
-import { AttributeEnum, bardSpellCapacity, sorcererSpellCapacity, warlockSpellCapacity } from "../utils/constants";
+import {
+  IAttributeObject,
+  ICharacterClassModel,
+  IClassNameLevelSubclass,
+  ISaveCharacterClass,
+} from '../utils/interfaces';
+import { convertAttrToBonusObject } from './AttributeMapper';
+import { saveCharacterDto } from '../dtos/saveCharacterDtos';
+import { AttributeEnum } from '../utils/constants';
 
-export const mapNewCharacterClass = (className: string, characterId: string, spellCastAttr: AttributeEnum | null, requestBody: saveCharacterDto): ISaveCharacterClass => {
-
-  const characterAttributes = requestBody.attributeArray
-  const attributeBonuses = convertAttrToBonusObject(characterAttributes)
-  const spellSaveDC = calculateSpellSaveDC(attributeBonuses, spellCastAttr, 2)
-  const spellCapacity = calculateSpellCapacity(className, 1, attributeBonuses, spellCastAttr)
-  const proficientSkills = requestBody.chosenProficientSkills
+export const mapNewCharacterClass = (
+  className: string,
+  characterId: string,
+  spellCastAttr: AttributeEnum | null,
+  requestBody: saveCharacterDto
+): ISaveCharacterClass => {
+  const characterAttributes = requestBody.attributeArray;
+  const attributeBonuses = convertAttrToBonusObject(characterAttributes);
+  const spellSaveDC = calculateSpellSaveDC(attributeBonuses, spellCastAttr, 2);
+  const spellCapacity = calculateSpellCapacity(
+    className,
+    1,
+    attributeBonuses,
+    spellCastAttr
+  );
+  const proficientSkills = requestBody.chosenProficientSkills;
   const newCharClass = {
     classLevel: 1,
     subClass: '',
@@ -18,30 +32,38 @@ export const mapNewCharacterClass = (className: string, characterId: string, spe
     proficientSkills: proficientSkills,
     className: className,
     characterId: characterId,
-  }
-  return newCharClass
-}
+  };
+  return newCharClass;
+};
 
-const calculateSpellSaveDC = (characterAttributeObject: IAttributeObject, spellCastAttr: AttributeEnum | null, profBonus: number) => {
-  if(!spellCastAttr) {
-    return 0
+const calculateSpellSaveDC = (
+  characterAttributeObject: IAttributeObject,
+  spellCastAttr: AttributeEnum | null,
+  profBonus: number
+) => {
+  if (!spellCastAttr) {
+    return 0;
   }
-  const spellSaveDC = 8 + characterAttributeObject[spellCastAttr] + profBonus
-  return spellSaveDC
-}
+  const spellSaveDC = 8 + characterAttributeObject[spellCastAttr] + profBonus;
+  return spellSaveDC;
+};
 
-const calculateSpellCapacity = (className: string, classLevel: number, characterAttributeObject: IAttributeObject, spellCastAttr: AttributeEnum | null) => {
-  if(spellCastAttr === null) return 0
-  const dynamicClasses = ['Wizard', 'Cleric', 'Druid']
-  if(dynamicClasses.includes(className)) {
-    const spellCap = classLevel + characterAttributeObject[spellCastAttr]
-    console.log(spellCap)
-    return spellCap
-  } else if(className === 'Sorcerer') {
-    return sorcererSpellCapacity[classLevel - 1]
-  } else if(className === 'Bard') {
-    return bardSpellCapacity[classLevel - 1]
-  } else {
-    return warlockSpellCapacity[classLevel - 1]
-  }
-}
+export const mapClassNameAndLevel = (
+  characterClasses: ICharacterClassModel[]
+): IClassNameLevelSubclass[] => {
+  const classNameAndLevels = characterClasses.map((characterClass) => {
+    if (characterClass.subClass) {
+      return {
+        className: characterClass.className,
+        classLevel: characterClass.classLevel,
+        subclass: characterClass.subClass,
+      };
+    } else {
+      return {
+        className: characterClass.className,
+        classLevel: characterClass.classLevel,
+      };
+    }
+  });
+  return classNameAndLevels;
+};
