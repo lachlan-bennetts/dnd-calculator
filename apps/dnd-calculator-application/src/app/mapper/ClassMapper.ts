@@ -156,16 +156,20 @@ const filterLevelUpSpells = (
   };
 };
 
-export const mapInitialClassLevelUpInfo = (classes: IClassModel[]) => {
-  const mappedClasses = classes.map((classObj: IClassModel) => {
-    const filteredFeatures = classObj.classFeatures.filter(
-      (feature) => feature.featureLevel === 1
-    );
-    const filteredSpells = classObj.spells.filter(
-      (spell) => spell.spellLevel === 0 || spell.spellLevel === 1
-    );
-    if (SpellcastingClasses.includes(classObj.className)) {
-      const newSpellSlots = calcNewSpellSlots(0, classObj.className);
+export const mapInitialClassLevelUpInfo = (
+  classes: IClassModel[],
+  logger: Logger
+) => {
+  try {
+    logger.info('Mapping initial class level up info');
+    const mappedClasses = classes.map((classObj: IClassModel) => {
+      const filteredFeatures = classObj.classFeatures.filter(
+        (feature) => feature.featureLevel === 1
+      );
+      const filteredSpells = classObj.spells.filter(
+        (spell) => spell.spellLevel === 0 || spell.spellLevel === 1
+      );
+      const spellInfo = mapInitSpellInfo(classObj.className, filteredSpells);
       const mappedClassInfo = {
         className: classObj.className,
         hitDie: classObj.hitDie,
@@ -173,29 +177,26 @@ export const mapInitialClassLevelUpInfo = (classes: IClassModel[]) => {
         weaponProficiencies: classObj.weaponProficiencies,
         primaryAttribute: classObj.primaryAttribute,
         classFeatures: filteredFeatures,
-        spellInfo: {
-          newSpellSlots: newSpellSlots,
-          availableSpells: filteredSpells,
-          newSpellCastingLevel: 1,
-        },
+        spellInfo: spellInfo,
       };
       return mappedClassInfo;
-    } else {
-      const mappedClassInfo = {
-        className: classObj.className,
-        hitDie: classObj.hitDie,
-        armourProficiencies: classObj.armourProficiencies,
-        weaponProficiencies: classObj.weaponProficiencies,
-        primaryAttribute: classObj.primaryAttribute,
-        classFeatures: filteredFeatures,
-        spellInfo: {
-          newSpellSlots: [],
-          availableSpells: [],
-          newSpellCastingLevel: 0,
-        },
-      };
-      return mappedClassInfo;
-    }
-  });
-  return mappedClasses;
+    });
+    return mappedClasses;
+  } catch (err) {
+    logger.error('Error mapping initial class level up info', err);
+    throw err;
+  }
+};
+
+const mapInitSpellInfo = (className: string, allSpells: ISpellModel[]) => {
+  const spellCastingLevel = SpellcastingClasses.includes(className) ? 1 : 0;
+  const newSpellSlots = calcNewSpellSlots(spellCastingLevel, className);
+  const filteredSpells = allSpells.filter(
+    (spell) => spell.spellLevel === 0 || spell.spellLevel === 1
+  );
+  return {
+    newSpellSlots: newSpellSlots,
+    availableSpells: filteredSpells,
+    newSpellCastingLevel: spellCastingLevel,
+  };
 };

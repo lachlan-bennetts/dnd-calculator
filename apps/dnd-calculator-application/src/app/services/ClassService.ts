@@ -8,7 +8,10 @@ import {
   IClassName,
   IClassNameLevelSubclass,
 } from '../utils/interfaces';
-import { mapClassLevelUpDetails } from '../mapper/ClassMapper';
+import {
+  mapClassLevelUpDetails,
+  mapInitialClassLevelUpInfo,
+} from '../mapper/ClassMapper';
 
 export interface IClassFeature {
   classFeatureId: string;
@@ -97,5 +100,21 @@ export class ClassService {
     // For example if a class feature allows for the spell darkness to be learned
     // without impacting spell capacity, how does that look?
     return levelUpClassInfo;
+  }
+
+  async retrieveInitialClassInfo() {
+    try {
+      const allClasses: IClassModel[] =
+        await this.classRepository.retrieveAllClasses(this.logger);
+
+      const initialClassFeaturesAndSpells = mapInitialClassLevelUpInfo(
+        allClasses,
+        this.logger
+      );
+      return initialClassFeaturesAndSpells;
+    } catch (err) {
+      this.logger.error('Error retrieving initial class info', err);
+      throw err;
+    }
   }
 }

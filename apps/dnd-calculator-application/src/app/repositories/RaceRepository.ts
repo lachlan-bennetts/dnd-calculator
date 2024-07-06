@@ -1,5 +1,5 @@
-import { PrismaClient, Race } from "@prisma/client";
-import { Logger } from "../utils/Logger";
+import { PrismaClient, Race } from '@prisma/client';
+import { Logger } from '../utils/Logger';
 
 export class RaceRepository {
   private prisma: PrismaClient;
@@ -11,26 +11,40 @@ export class RaceRepository {
   async findRaceByName(raceName: string): Promise<Race | null> {
     const retrievedRace = await this.prisma.race.findFirst({
       where: {
-        subRace: raceName
+        subRace: raceName,
       },
-    })
-    return retrievedRace
+    });
+    return retrievedRace;
   }
 
   async retrieveRaceAndFeatures(raceName: string, logger: Logger) {
     try {
       const raceAndFeatures = await this.prisma.race.findFirst({
         where: {
-          subRace: raceName
+          subRace: raceName,
         },
         include: {
-          features: true
-        }
-      })
-      return raceAndFeatures
-    } catch(err) {
-      logger.error(`Error retrieving raceData from raceName ${raceName} `)
-      throw err
+          features: true,
+        },
+      });
+      return raceAndFeatures;
+    } catch (err) {
+      logger.error(`Error retrieving raceData from raceName ${raceName} `);
+      throw err;
+    }
+  }
+
+  async collectAllRaces(logger: Logger) {
+    try {
+      const allRaces = await this.prisma.race.findMany({
+        include: {
+          features: true,
+        },
+      });
+      return allRaces;
+    } catch (err) {
+      logger.error(`Error retrieving all races`);
+      throw err;
     }
   }
 }

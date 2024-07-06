@@ -203,7 +203,7 @@ export interface ISpellModel {
   characterSpells?: string[];
 }
 
-interface IRaceModel {
+export interface IRaceModel {
   subRace: string;
   parentRace: string;
   briefDescription: string;
@@ -228,7 +228,7 @@ interface IRaceModel {
   toolProficiencies: string[];
   skillProficiencies: string[];
   languages: string[];
-  features?: IRaceFeatureModel[];
+  features: IRaceFeatureModel[];
   character?: ICharacterModel[];
 }
 

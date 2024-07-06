@@ -28,6 +28,7 @@ import {
 import { SpellService } from './SpellService';
 import { IClassNameLevelSubclass } from '../utils/interfaces';
 import { Character } from '@prisma/client';
+import { BackgroundService } from './BackgroundService';
 
 export interface ICharacterAux {
   raceInfo: ICharacterRaceInfo;
@@ -54,6 +55,7 @@ export class CharacterService {
   private classService: ClassService;
   private raceService: RaceService;
   private spellService: SpellService;
+  private backgroundService: BackgroundService;
 
   constructor(inheritLogger: Logger) {
     this.logger = inheritLogger;
@@ -63,6 +65,7 @@ export class CharacterService {
     this.classService = new ClassService(inheritLogger);
     this.raceService = new RaceService(inheritLogger);
     this.spellService = new SpellService(inheritLogger);
+    this.backgroundService = new BackgroundService(inheritLogger);
   }
 
   async createNewCharacter(requestBody: saveCharacterDto) {
@@ -348,6 +351,21 @@ export class CharacterService {
     };
 
     return characterInfo;
+  }
+
+  async getInitialLevelUp(userId: string) {
+    this.doesUserExist(userId);
+
+    const classesInfo = await this.classService.retrieveInitialClassInfo();
+    const raceInfo = await this.raceService.collectInitialRaceData();
+    const backgroundInfo =
+      await this.backgroundService.retrieveAllBackgroundData();
+
+    return {
+      classInformation: classesInfo,
+      raceInformation: raceInfo,
+      backgroundInformation: backgroundInfo,
+    };
   }
 
   async retrieveCharacter(characterId: string, userId: string) {

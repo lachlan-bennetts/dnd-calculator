@@ -1,4 +1,8 @@
-import { mapCharacterRaceInfo, mapRaceLevelUp } from '../mapper/RaceMapper';
+import {
+  mapCharacterRaceInfo,
+  mapInitialRaceData,
+  mapRaceLevelUp,
+} from '../mapper/RaceMapper';
 import { RaceRepository } from '../repositories/RaceRepository';
 import { Logger } from '../utils/Logger';
 import { IRaceFeatureModel } from '../utils/interfaces';
@@ -95,6 +99,21 @@ export class RaceService {
       return levelUpRaceData;
     } catch (err) {
       this.logger.error('Error occured in collectLevelUpRaceInfo', err);
+      throw err;
+    }
+  }
+
+  async collectInitialRaceData() {
+    try {
+      this.logger.info('Collecting all race data');
+      const allRaceData = await this.raceRepository.collectAllRaces(
+        this.logger
+      );
+
+      const mappedRaces = mapInitialRaceData(allRaceData, this.logger);
+      return mappedRaces;
+    } catch (err) {
+      this.logger.error('Error collecting race data', err);
       throw err;
     }
   }
